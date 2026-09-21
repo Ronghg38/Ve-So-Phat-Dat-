@@ -3,100 +3,168 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vé Số Phát Đạt - Soi Cầu XSMN</title>
+  <title>Vé Số Phát Đạt - Trực Tiếp KQXS</title>
   <style>
-    body{margin:0;font-family:Arial,sans-serif;background:#fff8e8;color:#222}
-    header{background:#b40000;color:#ffd700;text-align:center;padding:15px}
-    h1{margin:0;font-size:22px}
-    .box{max-width:900px;margin:15px auto;padding:10px}
-    button{background:#b40000;color:white;border:0;padding:12px;border-radius:8px;font-weight:bold;width:100%;margin-bottom:10px}
-    table{width:100%;border-collapse:collapse;margin-top:10px;background:white;text-align:center}
-    th,td{border:1px solid #ddd;padding:6px 2px;font-size:13px}
-    th{background:#f2f2f2;color:#333}
-    .card{background:white;padding:15px;margin-bottom:15px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
-    .prize-name{font-weight:bold;color:#b40000;width:30px;font-size:12px}
-    .numbers{font-weight:bold;color:#111}
-    .date-title{text-align:center;color:#b40000;border-bottom:2px dashed #b40000;padding-bottom:10px;margin-top:20px;font-size:18px}
+    /* Nền trang màu xám nhạt để khối xổ số nổi bật */
+    body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #e9ecef; color: #333; }
+    
+    /* Thanh tiêu đề giống các trang Xoso.me, Minh Ngọc */
+    header { background: #d32f2f; color: #fff; text-align: center; padding: 15px 10px; border-bottom: 4px solid #ffc107; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    h1 { margin: 0; font-size: 24px; text-transform: uppercase; text-shadow: 1px 1px 2px #000; letter-spacing: 1px; }
+    .subtitle { font-size: 14px; color: #ffeb3b; margin-top: 5px; font-weight: bold; }
+    
+    .container { max-width: 800px; margin: 15px auto; padding: 0 10px; }
+    
+    /* Khối chứa thông tin */
+    .box { background: #fff; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+    
+    /* Nút bấm làm mới */
+    .btn-container { padding: 15px; border-bottom: 1px solid #eee; text-align: center; }
+    .btn { background: #1976d2; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; width: 100%; font-size: 15px; text-transform: uppercase; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .btn:active { background: #1565c0; transform: scale(0.98); }
+    .status-text { font-size: 13px; color: #666; margin-bottom: 10px; }
+
+    /* Tiêu đề ngày tháng */
+    .date-title { background: #d32f2f; color: #fff; padding: 12px; text-align: center; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: bold; }
+
+    /* Bảng xổ số chuẩn */
+    .xs-table { width: 100%; border-collapse: collapse; text-align: center; }
+    .xs-table th, .xs-table td { border: 1px solid #ccc; padding: 10px 4px; vertical-align: middle; }
+    .xs-table thead { background: #f8f9fa; }
+    .xs-table th { font-weight: bold; color: #111; font-size: 13px; }
+    
+    /* Cột tên giải */
+    .xs-table .giai { font-weight: bold; width: 45px; color: #d32f2f; background: #fff8f8; font-size: 14px; }
+    
+    /* Các con số */
+    .xs-table .so { font-size: 16px; font-weight: bold; letter-spacing: 1.5px; line-height: 1.5; color: #000; }
+    .xs-table .so-db { color: #d32f2f; font-size: 22px; } /* Giải đặc biệt màu đỏ, to hơn */
+    .xs-table .so-g8 { color: #d32f2f; } /* Giải 8 cũng màu đỏ */
   </style>
 </head>
 <body>
 
 <header>
   <h1>🎯 VÉ SỐ PHÁT ĐẠT</h1>
-  <div style="font-size: 14px; margin-top: 5px;">Soi Cầu - Thống Kê Tham Khảo</div>
+  <div class="subtitle">TRỰC TIẾP KẾT QUẢ XỔ SỐ</div>
 </header>
 
-<div class="box">
-  <div class="card">
-    <h2 style="margin-top:0; font-size:18px;">📊 Bảng Điều Khiển</h2>
-    <p id="status">Đang kết nối...</p>
-    <button onclick="updateData()">🔄 LẤY DỮ LIỆU MỚI NHẤT</button>
+<div class="container">
+  <div class="box">
+    <div class="btn-container">
+      <div class="status-text" id="status">Đang đồng bộ dữ liệu...</div>
+      <button class="btn" onclick="updateData()">🔄 LÀM MỚI KẾT QUẢ</button>
+    </div>
   </div>
 
-  <div class="card">
-    <h2 style="margin-top:0; font-size:18px;">📋 Kết quả xổ số</h2>
-    <div id="results">Đang tải bảng kết quả...</div>
+  <div id="results">
+    <!-- Dữ liệu sẽ được tự động điền vào đây -->
   </div>
 </div>
 
 <script>
 async function loadData(){
-  try{
+  try {
     const s = await fetch('/api/status').then(r=>r.json());
-    let dateText = s.updatedAt ? new Date(s.updatedAt).toLocaleString('vi-VN') : 'Chưa rõ';
-    document.getElementById('status').innerHTML = 
-      'Lần cập nhật cuối: <b>'+ dateText + '</b><br>Dữ liệu đang lưu: <b>'+ (s.totalDays || 0) + ' ngày</b>';
+    let dateText = s.updatedAt ? new Date(s.updatedAt).toLocaleString('vi-VN') : 'Chưa có';
+    document.getElementById('status').innerHTML = 'Cập nhật lần cuối: <b>' + dateText + '</b>';
 
     const data = await fetch('/api/results').then(r=>r.json());
 
     if(!data || !data.length){
-      document.getElementById('results').innerHTML = '<i>Hiện chưa có dữ liệu xổ số.</i>';
+      document.getElementById('results').innerHTML = '<div class="box" style="padding: 20px; text-align: center; font-weight: bold;">Chưa có dữ liệu xổ số. Vui lòng bấm làm mới.</div>';
       return;
     }
 
     let html = '';
 
-    data.slice(0,5).forEach(x => {
+    data.slice(0,3).forEach(x => {
       let timeText = x.updatedAt ? new Date(x.updatedAt).toLocaleDateString('vi-VN') : 'Kỳ quay mới';
-      html += '<h3 class="date-title">Ngày: ' + timeText + '</h3>';
-      html += '<table>';
-
+      
+      html += '<div class="box">';
+      html += '<h2 class="date-title">KẾT QUẢ - NGÀY ' + timeText + '</h2>';
+      html += '<table class="xs-table">';
+      
       if(x.rows && x.rows.length > 0) {
+         let theadHtml = '<thead>';
+         let tbodyHtml = '<tbody>';
+         
+         // Tìm số cột nhiều nhất để tính toán bù ô trống
+         let maxCols = Math.max(...x.rows.map(r => r.length));
+         if (maxCols < 2) maxCols = 4; // Mặc định bảng thường có 4 cột
+
          x.rows.forEach((row, rowIndex) => {
-           html += '<tr>';
-           row.forEach((cell, colIndex) => {
-             // Dòng đầu tiên làm tiêu đề các đài
+           // Nhận diện dòng nào là Giải (Bắt đầu bằng G, ĐB, hoặc Mã)
+           let isPrize = row[0] && (row[0].startsWith('G') || row[0].startsWith('Đ') || row[0].startsWith('M'));
+           
+           if (!isPrize) {
+             // Đây là dòng chứa Tên Đài / Giờ xổ
+             theadHtml += '<tr>';
+             // Bù thêm 1 ô Giải ở cột đầu tiên
              if (rowIndex === 0) {
-                html += '<th>' + cell + '</th>';
+                 theadHtml += '<th class="giai">Giải</th>';
              } else {
-                if (colIndex === 0) {
-                   html += '<td class="prize-name">' + cell + '</td>'; // Cột tên giải G8, G7...
-                } else {
-                   // Tách các số bằng dấu cách để ép xuống dòng cho dễ nhìn trên điện thoại
-                   let formattedCell = cell.replace(/ /g, '<br>');
-                   html += '<td class="numbers">' + formattedCell + '</td>';
-                }
+                 theadHtml += '<th class="giai"></th>';
              }
-           });
-           html += '</tr>';
+             
+             // In tên đài
+             row.forEach(cell => {
+                 let formattedCell = cell.replace(' ', '<br>'); // Ép chữ xuống dòng cho gọn
+                 theadHtml += '<th>' + formattedCell + '</th>';
+             });
+             
+             // Bù cột trống nếu cần
+             let currentCols = row.length + 1;
+             for(let i = currentCols; i < maxCols; i++){
+                 theadHtml += '<th></th>';
+             }
+             theadHtml += '</tr>';
+             
+           } else {
+             // Đây là dòng chứa Con số kết quả
+             tbodyHtml += '<tr>';
+             row.forEach((cell, colIndex) => {
+               if (colIndex === 0) {
+                 tbodyHtml += '<td class="giai">' + cell + '</td>';
+               } else {
+                 let classes = 'so';
+                 if (row[0] === 'ĐB' || row[0] === 'Đặc Biệt') classes += ' so-db';
+                 if (row[0] === 'G8') classes += ' so-g8';
+                 
+                 let formattedCell = cell.replace(/ /g, '<br>');
+                 tbodyHtml += '<td class="' + classes + '">' + formattedCell + '</td>';
+               }
+             });
+             
+             // Bù cột trống nếu đài đó chưa xổ xong
+             for(let i = row.length; i < maxCols; i++){
+                 tbodyHtml += '<td></td>';
+             }
+             tbodyHtml += '</tr>';
+           }
          });
+         
+         theadHtml += '</thead>';
+         tbodyHtml += '</tbody>';
+         html += theadHtml + tbodyHtml;
       }
-      html += '</table>';
+      
+      html += '</table></div>';
     });
 
     document.getElementById('results').innerHTML = html;
-  }catch(e){
-    document.getElementById('status').innerHTML = '<span style="color:red;">Lỗi: Chưa kết nối được máy chủ.</span>';
+  } catch(e) {
+    document.getElementById('status').innerHTML = '<span style="color:red; font-weight:bold;">Đang kết nối lại máy chủ...</span>';
   }
 }
 
 async function updateData(){
-  document.getElementById('status').textContent = 'Đang quét dữ liệu mới (vui lòng đợi vài giây)...';
+  document.getElementById('status').textContent = 'Hệ thống đang quét số mới (vui lòng đợi)...';
   try {
     await fetch('/api/update', {method:'POST'});
     setTimeout(loadData, 2000); 
   } catch(e) {
-    alert("Có lỗi khi cập nhật!");
+    alert("Có lỗi khi cập nhật, thử lại sau!");
   }
 }
 
