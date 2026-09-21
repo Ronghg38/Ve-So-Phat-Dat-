@@ -6,82 +6,101 @@
   <title>Vé Số Phát Đạt - Soi Cầu XSMN</title>
   <style>
     body{margin:0;font-family:Arial,sans-serif;background:#fff8e8;color:#222}
-    header{background:#b40000;color:#ffd700;text-align:center;padding:20px}
-    h1{margin:0;font-size:25px}
-    .box{max-width:900px;margin:20px auto;padding:15px}
-    button{background:#b40000;color:white;border:0;padding:12px 20px;border-radius:8px}
-    table{width:100%;border-collapse:collapse;margin-top:15px;background:white}
-    th,td{border:1px solid #ddd;padding:8px}
-    th{background:#b40000;color:white}
-    .card{background:white;padding:15px;margin-top:15px;border-radius:10px}
+    header{background:#b40000;color:#ffd700;text-align:center;padding:15px}
+    h1{margin:0;font-size:22px}
+    .box{max-width:900px;margin:15px auto;padding:10px}
+    button{background:#b40000;color:white;border:0;padding:12px;border-radius:8px;font-weight:bold;width:100%;margin-bottom:10px}
+    table{width:100%;border-collapse:collapse;margin-top:10px;background:white;text-align:center}
+    th,td{border:1px solid #ddd;padding:6px 2px;font-size:13px}
+    th{background:#f2f2f2;color:#333}
+    .card{background:white;padding:15px;margin-bottom:15px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+    .prize-name{font-weight:bold;color:#b40000;width:30px;font-size:12px}
+    .numbers{font-weight:bold;color:#111}
+    .date-title{text-align:center;color:#b40000;border-bottom:2px dashed #b40000;padding-bottom:10px;margin-top:20px;font-size:18px}
   </style>
 </head>
 <body>
 
 <header>
   <h1>🎯 VÉ SỐ PHÁT ĐẠT</h1>
-  <div>Soi Cầu XSMN - Thống Kê Tham Khảo</div>
+  <div style="font-size: 14px; margin-top: 5px;">Soi Cầu - Thống Kê Tham Khảo</div>
 </header>
 
 <div class="box">
   <div class="card">
-    <h2>📊 Dữ liệu XSMN</h2>
-    <p id="status">Đang tải dữ liệu...</p>
-    <button onclick="updateData()">🔄 Cập nhật dữ liệu</button>
+    <h2 style="margin-top:0; font-size:18px;">📊 Bảng Điều Khiển</h2>
+    <p id="status">Đang kết nối...</p>
+    <button onclick="updateData()">🔄 LẤY DỮ LIỆU MỚI NHẤT</button>
   </div>
 
   <div class="card">
-    <h2>📈 Thống kê</h2>
-    <p id="analysis">Đang phân tích...</p>
-  </div>
-
-  <div class="card">
-    <h2>📋 Kết quả gần nhất</h2>
-    <div id="results">Đang tải...</div>
+    <h2 style="margin-top:0; font-size:18px;">📋 Kết quả xổ số</h2>
+    <div id="results">Đang tải bảng kết quả...</div>
   </div>
 </div>
 
 <script>
 async function loadData(){
   try{
-    const s=await fetch('/api/status').then(r=>r.json());
-    document.getElementById('status').innerHTML=
-      'Cập nhật gần nhất: '+(s.updatedAt||'Chưa có')+
-      '<br>Số ngày dữ liệu: '+s.totalDays;
+    const s = await fetch('/api/status').then(r=>r.json());
+    let dateText = s.updatedAt ? new Date(s.updatedAt).toLocaleString('vi-VN') : 'Chưa rõ';
+    document.getElementById('status').innerHTML = 
+      'Lần cập nhật cuối: <b>'+ dateText + '</b><br>Dữ liệu đang lưu: <b>'+ (s.totalDays || 0) + ' ngày</b>';
 
-    const a=await fetch('/api/analyze').then(r=>r.json());
-    document.getElementById('analysis').textContent=a.message;
+    const data = await fetch('/api/results').then(r=>r.json());
 
-    const data=await fetch('/api/results').then(r=>r.json());
-
-    if(!data.length){
-      document.getElementById('results').textContent='Chưa có dữ liệu.';
+    if(!data || !data.length){
+      document.getElementById('results').innerHTML = '<i>Hiện chưa có dữ liệu xổ số.</i>';
       return;
     }
 
-    let html='<table><tr><th>Thời gian</th><th>Dữ liệu</th></tr>';
+    let html = '';
 
-    data.slice(0,10).forEach(x=>{
-      html+='<tr><td>'+new Date(x.updatedAt).toLocaleString('vi-VN')+
-        '</td><td>'+x.rows.map(r=>r.join(' | ')).join('<br>')+
-        '</td></tr>';
+    data.slice(0,5).forEach(x => {
+      let timeText = x.updatedAt ? new Date(x.updatedAt).toLocaleDateString('vi-VN') : 'Kỳ quay mới';
+      html += '<h3 class="date-title">Ngày: ' + timeText + '</h3>';
+      html += '<table>';
+
+      if(x.rows && x.rows.length > 0) {
+         x.rows.forEach((row, rowIndex) => {
+           html += '<tr>';
+           row.forEach((cell, colIndex) => {
+             // Dòng đầu tiên làm tiêu đề các đài
+             if (rowIndex === 0) {
+                html += '<th>' + cell + '</th>';
+             } else {
+                if (colIndex === 0) {
+                   html += '<td class="prize-name">' + cell + '</td>'; // Cột tên giải G8, G7...
+                } else {
+                   // Tách các số bằng dấu cách để ép xuống dòng cho dễ nhìn trên điện thoại
+                   let formattedCell = cell.replace(/ /g, '<br>');
+                   html += '<td class="numbers">' + formattedCell + '</td>';
+                }
+             }
+           });
+           html += '</tr>';
+         });
+      }
+      html += '</table>';
     });
 
-    html+='</table>';
-    document.getElementById('results').innerHTML=html;
+    document.getElementById('results').innerHTML = html;
   }catch(e){
-    document.getElementById('status').textContent='Chưa kết nối được máy chủ.';
+    document.getElementById('status').innerHTML = '<span style="color:red;">Lỗi: Chưa kết nối được máy chủ.</span>';
   }
 }
 
 async function updateData(){
-  document.getElementById('status').textContent='Đang cập nhật...';
-  await fetch('/api/update',{method:'POST'});
-  loadData();
+  document.getElementById('status').textContent = 'Đang quét dữ liệu mới (vui lòng đợi vài giây)...';
+  try {
+    await fetch('/api/update', {method:'POST'});
+    setTimeout(loadData, 2000); 
+  } catch(e) {
+    alert("Có lỗi khi cập nhật!");
+  }
 }
 
 loadData();
-setInterval(loadData,60000);
 </script>
 
 </body>
