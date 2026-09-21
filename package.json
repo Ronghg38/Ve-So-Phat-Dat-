@@ -1,0 +1,14 @@
+{
+  "name": "ve-so-phat-dat-soi-cau-xsmn",
+  "version": "1.0.0",
+  "description": "Vé Số Phát Đạt - Soi Cầu XSMN",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3"
+  }
+}
