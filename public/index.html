@@ -30,9 +30,9 @@
     .station-card { background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
     
     /* Màu sắc tiêu đề từng đài (Xanh dương, Xanh lá, Tím) */
-    .station-card:nth-child(3n+1) .station-name { background: #1976d2; } /* Xanh dương */
-    .station-card:nth-child(3n+2) .station-name { background: #388e3c; } /* Xanh lá */
-    .station-card:nth-child(3n+3) .station-name { background: #7b1fa2; } /* Tím */
+    .station-card:nth-child(3n+1) .station-name { background: #1976d2; } 
+    .station-card:nth-child(3n+2) .station-name { background: #388e3c; } 
+    .station-card:nth-child(3n+3) .station-name { background: #7b1fa2; } 
     
     .station-name { color: white; text-align: center; padding: 10px; font-weight: bold; text-transform: uppercase; font-size: 16px; border-bottom: 2px solid #fff; }
 
@@ -40,7 +40,7 @@
     .prize-row { display: flex; border-bottom: 1px solid #eee; align-items: center; }
     .prize-row:last-child { border-bottom: none; }
     .prize-label { width: 45px; background: #f4f4f4; text-align: center; font-weight: bold; padding: 10px 5px; color: #555; border-right: 1px solid #eee; font-size: 13px; }
-    .prize-nums { flex: 1; text-align: center; padding: 10px 5px; font-weight: bold; font-size: 16px; color: #000; letter-spacing: 2px; line-height: 1.4; }
+    .prize-nums { flex: 1; text-align: center; padding: 10px 5px; font-weight: bold; font-size: 16px; color: #000; letter-spacing: 2px; line-height: 1.5; }
     
     /* Nổi bật giải 8 và Đặc biệt bằng màu đỏ */
     .highlight-red { color: #d30000; }
@@ -85,9 +85,8 @@ async function loadData() {
       document.getElementById('results').innerHTML = '<div style="background:#fff;padding:20px;text-align:center;">Chưa có dữ liệu.</div>';
       return;
     }
-    currentData = data[0]; // Lấy dữ liệu kỳ quay mới nhất
+    currentData = data[0]; 
     
-    // Hiển thị ngày
     let dateText = currentData.updatedAt ? new Date(currentData.updatedAt).toLocaleDateString('vi-VN') : 'Hôm nay';
     document.getElementById('date-display').innerText = 'KẾT QUẢ NGÀY ' + dateText;
     
@@ -102,7 +101,6 @@ function renderMienNam(dataObj) {
   if(!dataObj || !dataObj.rows || dataObj.rows.length === 0) return;
   
   let rows = dataObj.rows;
-  // Giả định dòng đầu tiên chứa tên đài (bỏ cột 'Giải' ở vị trí 0)
   let stations = [];
   for (let i = 1; i < rows[0].length; i++) {
      if(rows[0][i]) stations.push(rows[0][i]);
@@ -110,26 +108,22 @@ function renderMienNam(dataObj) {
 
   let html = '<div class="stations-grid">';
   
-  // Vẽ từng thẻ (card) cho từng đài
   stations.forEach((station, index) => {
     html += '<div class="station-card">';
     html += '<div class="station-name">' + station + '</div>';
     
-    // Duyệt qua các hàng giải (từ hàng 1 trở đi)
     for(let i = 1; i < rows.length; i++) {
        let row = rows[i];
-       // Kiểm tra xem dòng này có phải là dòng chứa giải thưởng không (Bắt đầu bằng G hoặc ĐB)
        if (row[0] && (row[0].startsWith('G') || row[0].startsWith('Đ') || row[0].startsWith('M'))) {
            let prizeName = row[0];
-           let prizeNums = row[index + 1] || ''; // Lấy số tương ứng với cột của đài
+           let prizeNums = row[index + 1] || ''; 
            
-           // Định dạng hiển thị
            let numClass = 'prize-nums';
            if (prizeName === 'ĐB' || prizeName === 'Đặc Biệt') numClass += ' highlight-db';
            else if (prizeName === 'G8') numClass += ' highlight-red';
            
-           // Thay khoảng trắng bằng dấu gạch ngang để giống ảnh
-           let formattedNums = prizeNums.replace(/ /g, ' - ');
+           // Cập nhật quan trọng: Xóa khoảng trắng thừa 2 bên, sau đó gom nhiều khoảng trắng ở giữa thành 1 cụm " - "
+           let formattedNums = prizeNums.trim().replace(/\s+/g, ' - ');
            
            html += '<div class="prize-row">';
            html += '<div class="prize-label">' + prizeName + '</div>';
@@ -145,7 +139,6 @@ function renderMienNam(dataObj) {
 }
 
 function switchRegion(region) {
-  // Đổi màu nút Tab
   let btns = document.querySelectorAll('.tab-btn');
   btns.forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
@@ -153,7 +146,6 @@ function switchRegion(region) {
   if (region === 'XSMN') {
     renderMienNam(currentData);
   } else {
-    // Tạm thời hiển thị thông báo nếu backend chưa hỗ trợ quét MT/MB
     document.getElementById('results').innerHTML = '<div style="background:#fff;padding:40px;text-align:center;font-weight:bold;border-radius:8px;">Hệ thống đang nâng cấp dữ liệu cho ' + region + '.<br><br>Vui lòng chọn Miền Nam để xem!</div>';
   }
 }
@@ -168,7 +160,6 @@ async function updateData() {
   }
 }
 
-// Bắt đầu tải dữ liệu khi mở trang
 loadData();
 </script>
 
