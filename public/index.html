@@ -1,79 +1,176 @@
-const express=require("express");
-const cheerio=require("cheerio");
-const cron=require("node-cron");
-const fs=require("fs");
-const path=require("path");
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vé Số Phát Đạt - Trực Tiếp 3 Miền</title>
+  <style>
+    /* Tổng quan */
+    body { margin: 0; font-family: 'Arial', sans-serif; background: #111; color: #333; }
+    
+    /* Header đỏ vàng chuẩn ảnh */
+    header { background: linear-gradient(180deg, #d30000 0%, #8b0000 100%); color: #ffd700; text-align: center; padding: 15px 5px; border-bottom: 3px solid #ffd700; }
+    h1 { margin: 0; font-size: 26px; text-transform: uppercase; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); letter-spacing: 1px; }
+    .subtitle { background: #ffd700; color: #b40000; display: inline-block; padding: 4px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-top: 8px; text-transform: uppercase; }
 
-const app=express(), PORT=process.env.PORT||3000;
-const DATA=path.join(__dirname,"data.json");
-const SOURCE="https://sxmn.com.vn/";
+    /* Tabs 3 Miền */
+    .tabs { display: flex; justify-content: center; background: #333; padding: 10px; gap: 5px; }
+    .tab-btn { flex: 1; padding: 10px 5px; background: #555; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 13px; }
+    .tab-btn.active { background: #d30000; border: 1px solid #ffd700; }
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname,"public")));
+    .container { max-width: 1000px; margin: 10px auto; padding: 0 5px; }
+    
+    /* Thanh công cụ cập nhật */
+    .toolbar { background: #fff; padding: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid #ddd; }
+    .toolbar-date { font-weight: bold; color: #d30000; font-size: 14px; }
+    .btn-update { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
 
-function load(){try{return JSON.parse(fs.readFileSync(DATA,"utf8"))}catch{return {updatedAt:null,source:SOURCE,days:[]}}}
-function save(x){fs.writeFileSync(DATA,JSON.stringify(x,null,2))}
+    /* Lưới các đài (chia cột như ảnh) */
+    .stations-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .station-card { background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+    
+    /* Màu sắc tiêu đề từng đài (Xanh dương, Xanh lá, Tím) */
+    .station-card:nth-child(3n+1) .station-name { background: #1976d2; } /* Xanh dương */
+    .station-card:nth-child(3n+2) .station-name { background: #388e3c; } /* Xanh lá */
+    .station-card:nth-child(3n+3) .station-name { background: #7b1fa2; } /* Tím */
+    
+    .station-name { color: white; text-align: center; padding: 10px; font-weight: bold; text-transform: uppercase; font-size: 16px; border-bottom: 2px solid #fff; }
 
-function clean(s){return (s||"").replace(/\s+/g," ").trim()}
-function dateVN(d=new Date()){
- const z=new Date(d.getTime()+7*3600000);
- return z.toISOString().slice(0,10).split("-").reverse().join("/");
+    /* Các hàng giải thưởng */
+    .prize-row { display: flex; border-bottom: 1px solid #eee; align-items: center; }
+    .prize-row:last-child { border-bottom: none; }
+    .prize-label { width: 45px; background: #f4f4f4; text-align: center; font-weight: bold; padding: 10px 5px; color: #555; border-right: 1px solid #eee; font-size: 13px; }
+    .prize-nums { flex: 1; text-align: center; padding: 10px 5px; font-weight: bold; font-size: 16px; color: #000; letter-spacing: 2px; line-height: 1.4; }
+    
+    /* Nổi bật giải 8 và Đặc biệt bằng màu đỏ */
+    .highlight-red { color: #d30000; }
+    .highlight-db { color: #d30000; font-size: 22px; font-weight: 900; }
+    
+    #status-msg { text-align: center; color: white; padding: 10px; font-style: italic; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>VÉ SỐ PHÁT ĐẠT</h1>
+  <div class="subtitle">SOI CẦU KẾT QUẢ XỔ SỐ 3 MIỀN</div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchRegion('XSMN')">Miền Nam</button>
+  <button class="tab-btn" onclick="switchRegion('XSMT')">Miền Trung</button>
+  <button class="tab-btn" onclick="switchRegion('XSMB')">Miền Bắc</button>
+</div>
+
+<div class="container">
+  <div class="toolbar">
+    <div class="toolbar-date" id="date-display">Đang tải ngày...</div>
+    <button class="btn-update" onclick="updateData()">🔄 Cập nhật ngay</button>
+  </div>
+  
+  <div id="status-msg"></div>
+  <div id="results">
+    <!-- Giao diện từng đài sẽ được vẽ vào đây -->
+  </div>
+</div>
+
+<script>
+let currentData = null;
+
+async function loadData() {
+  document.getElementById('status-msg').innerHTML = "Đang tải dữ liệu...";
+  try {
+    const data = await fetch('/api/results').then(r => r.json());
+    if(!data || !data.length) {
+      document.getElementById('results').innerHTML = '<div style="background:#fff;padding:20px;text-align:center;">Chưa có dữ liệu.</div>';
+      return;
+    }
+    currentData = data[0]; // Lấy dữ liệu kỳ quay mới nhất
+    
+    // Hiển thị ngày
+    let dateText = currentData.updatedAt ? new Date(currentData.updatedAt).toLocaleDateString('vi-VN') : 'Hôm nay';
+    document.getElementById('date-display').innerText = 'KẾT QUẢ NGÀY ' + dateText;
+    
+    renderMienNam(currentData);
+    document.getElementById('status-msg').innerHTML = "";
+  } catch(e) {
+    document.getElementById('status-msg').innerHTML = "Lỗi kết nối máy chủ!";
+  }
 }
 
-async function fetchToday(){
- const r=await fetch(SOURCE,{headers:{"User-Agent":"Mozilla/5.0"}});
- if(!r.ok) throw new Error("Nguồn kết quả trả về HTTP "+r.status);
- const html=await r.text(), $=cheerio.load(html);
- const text=$("body").text();
- // Lấy khối bảng kết quả XSMN gần nhất trên trang nguồn.
- const tables=[];
- $("table").each((i,t)=>{
-   const rows=[];
-   $(t).find("tr").each((_,tr)=>{
-     const cells=$(tr).find("th,td").map((_,c)=>clean($(c).text())).get();
-     if(cells.length) rows.push(cells);
-   });
-   if(rows.length) tables.push(rows);
- });
- // Tìm bảng có hàng G8/G7/ĐB.
- const result=tables.find(t=>t.some(r=>r.some(c=>c==="G8")) && t.some(r=>r.some(c=>c==="ĐB")));
- if(!result) throw new Error("Không tìm thấy bảng XSMN trên nguồn dữ liệu.");
- const headers=result.find(r=>r.includes("G8"))||[];
- const colCount=headers.length-1;
- const stations=headers.slice(1);
- const rows={};
- for(const st of stations) rows[st]={};
- for(const r of result){
-   const label=r[0];
-   if(["G8","G7","G6","G5","G4","G3","G2","G1","ĐB"].includes(label)){
-     stations.forEach((st,i)=>{rows[st][label]=r[i+1]||""});
-   }
- }
- const payload={date:dateVN(),updatedAt:new Date().toISOString(),stations:rows};
- const db=load();
- db.days=[payload,...db.days.filter(x=>x.date!==payload.date)].slice(0,120);
- db.updatedAt=payload.updatedAt; save(db);
- return payload;
+function renderMienNam(dataObj) {
+  if(!dataObj || !dataObj.rows || dataObj.rows.length === 0) return;
+  
+  let rows = dataObj.rows;
+  // Giả định dòng đầu tiên chứa tên đài (bỏ cột 'Giải' ở vị trí 0)
+  let stations = [];
+  for (let i = 1; i < rows[0].length; i++) {
+     if(rows[0][i]) stations.push(rows[0][i]);
+  }
+
+  let html = '<div class="stations-grid">';
+  
+  // Vẽ từng thẻ (card) cho từng đài
+  stations.forEach((station, index) => {
+    html += '<div class="station-card">';
+    html += '<div class="station-name">' + station + '</div>';
+    
+    // Duyệt qua các hàng giải (từ hàng 1 trở đi)
+    for(let i = 1; i < rows.length; i++) {
+       let row = rows[i];
+       // Kiểm tra xem dòng này có phải là dòng chứa giải thưởng không (Bắt đầu bằng G hoặc ĐB)
+       if (row[0] && (row[0].startsWith('G') || row[0].startsWith('Đ') || row[0].startsWith('M'))) {
+           let prizeName = row[0];
+           let prizeNums = row[index + 1] || ''; // Lấy số tương ứng với cột của đài
+           
+           // Định dạng hiển thị
+           let numClass = 'prize-nums';
+           if (prizeName === 'ĐB' || prizeName === 'Đặc Biệt') numClass += ' highlight-db';
+           else if (prizeName === 'G8') numClass += ' highlight-red';
+           
+           // Thay khoảng trắng bằng dấu gạch ngang để giống ảnh
+           let formattedNums = prizeNums.replace(/ /g, ' - ');
+           
+           html += '<div class="prize-row">';
+           html += '<div class="prize-label">' + prizeName + '</div>';
+           html += '<div class="' + numClass + '">' + formattedNums + '</div>';
+           html += '</div>';
+       }
+    }
+    html += '</div>';
+  });
+  
+  html += '</div>';
+  document.getElementById('results').innerHTML = html;
 }
-function digits(s){return (s.match(/\d/g)||[]).map(Number)}
-function total(s){return digits(s).reduce((a,b)=>a+b,0)%10}
-function loto(v){return [...new Set(v.filter(Boolean).flatMap(s=>(s.match(/\d{2}/g)||[]).map(x=>x.slice(-2))))]}
-function analyze(day){
- const stations=day.stations||{}, per={}, all=[];
- for(const [name,g] of Object.entries(stations)){
-   const db=g["ĐB"]||"", nums=loto(Object.values(g));
-   const tail=db.slice(-2), head=db.slice(0,1), t=total(db);
-   per[name]={db,total:t,head,tail,loto:nums};
-   all.push(...nums);
- }
- const c={}; all.forEach(n=>c[n]=(c[n]||0)+1);
- const cross=Object.entries(c).filter(([,n])=>n>=2).map(([n])=>n).sort();
- return {date:day.date,stations:per,cross};
+
+function switchRegion(region) {
+  // Đổi màu nút Tab
+  let btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  if (region === 'XSMN') {
+    renderMienNam(currentData);
+  } else {
+    // Tạm thời hiển thị thông báo nếu backend chưa hỗ trợ quét MT/MB
+    document.getElementById('results').innerHTML = '<div style="background:#fff;padding:40px;text-align:center;font-weight:bold;border-radius:8px;">Hệ thống đang nâng cấp dữ liệu cho ' + region + '.<br><br>Vui lòng chọn Miền Nam để xem!</div>';
+  }
 }
-app.get("/api/status",(req,res)=>{const d=load();res.json({updatedAt:d.updatedAt,source:d.source,latest:d.days[0]||null})});
-app.get("/api/results",(req,res)=>{const d=load();res.json(d.days.slice(0,30))});
-app.get("/api/analyze",(req,res)=>{const d=load(); if(!d.days[0]) return res.status(404).json({error:"Chưa có dữ liệu"});res.json(analyze(d.days[0]))});
-app.post("/api/update",async(req,res)=>{try{const x=await fetchToday();res.json({ok:true,data:x,analysis:analyze(x)})}catch(e){res.status(500).json({ok:false,error:e.message})}});
-cron.schedule("*/30 * * * *",()=>fetchToday().catch(e=>console.error("AUTO UPDATE:",e.message)),{timezone:"Asia/Ho_Chi_Minh"});
-fetchToday().catch(()=>{});
-app.listen(PORT,()=>console.log(`Soi Cau XSMN: http://localhost:${PORT}`));
+
+async function updateData() {
+  document.getElementById('status-msg').innerHTML = 'Hệ thống đang đồng bộ dữ liệu mới...';
+  try {
+    await fetch('/api/update', {method:'POST'});
+    setTimeout(loadData, 2000); 
+  } catch(e) {
+    alert("Có lỗi khi cập nhật!");
+  }
+}
+
+// Bắt đầu tải dữ liệu khi mở trang
+loadData();
+</script>
+
+</body>
+</html>
