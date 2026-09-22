@@ -1,162 +1,533 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vé Số Phát Đạt - Trực Tiếp 3 Miền</title>
-  <style>
-    /* Tổng quan */
-    body { margin: 0; font-family: 'Arial', sans-serif; background: #111; color: #333; }
-    
-    /* Header đỏ vàng chuẩn ảnh */
-    header { background: linear-gradient(180deg, #d30000 0%, #8b0000 100%); color: #ffd700; text-align: center; padding: 15px 5px; border-bottom: 3px solid #ffd700; }
-    h1 { margin: 0; font-size: 26px; text-transform: uppercase; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); letter-spacing: 1px; }
-    .subtitle { background: #ffd700; color: #b40000; display: inline-block; padding: 4px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-top: 8px; text-transform: uppercase; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vé Số Phát Đạt - Soi Cầu XSMN</title>
 
-    /* Tabs 3 Miền */
-    .tabs { display: flex; justify-content: center; background: #333; padding: 10px; gap: 5px; }
-    .tab-btn { flex: 1; padding: 10px 5px; background: #555; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 13px; }
-    .tab-btn.active { background: #d30000; border: 1px solid #ffd700; }
+<style>
+*{box-sizing:border-box}
 
-    .container { max-width: 1000px; margin: 10px auto; padding: 0 5px; }
-    
-    /* Thanh công cụ cập nhật */
-    .toolbar { background: #fff; padding: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid #ddd; }
-    .toolbar-date { font-weight: bold; color: #d30000; font-size: 14px; }
-    .btn-update { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f1f1f1;
+  color:#222
+}
 
-    /* Lưới các đài (chia cột như ảnh) */
-    .stations-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-bottom: 20px; }
-    .station-card { background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-    
-    /* Màu sắc tiêu đề từng đài (Xanh dương, Xanh lá, Tím) */
-    .station-card:nth-child(3n+1) .station-name { background: #1976d2; } 
-    .station-card:nth-child(3n+2) .station-name { background: #388e3c; } 
-    .station-card:nth-child(3n+3) .station-name { background: #7b1fa2; } 
-    
-    .station-name { color: white; text-align: center; padding: 10px; font-weight: bold; text-transform: uppercase; font-size: 16px; border-bottom: 2px solid #fff; }
+.header{
+  background:linear-gradient(180deg,#d40000,#8b0000);
+  color:#fff;
+  text-align:center;
+  padding:15px 10px;
+  border-bottom:4px solid #ffd700
+}
 
-    /* Các hàng giải thưởng */
-    .prize-row { display: flex; border-bottom: 1px solid #eee; align-items: center; }
-    .prize-row:last-child { border-bottom: none; }
-    .prize-label { width: 45px; background: #f4f4f4; text-align: center; font-weight: bold; padding: 10px 5px; color: #555; border-right: 1px solid #eee; font-size: 13px; }
-    .prize-nums { flex: 1; text-align: center; padding: 10px 5px; font-weight: bold; font-size: 16px; color: #000; letter-spacing: 2px; line-height: 1.5; }
-    
-    /* Nổi bật giải 8 và Đặc biệt bằng màu đỏ */
-    .highlight-red { color: #d30000; }
-    .highlight-db { color: #d30000; font-size: 22px; font-weight: 900; }
-    
-    #status-msg { text-align: center; color: white; padding: 10px; font-style: italic; }
-  </style>
+.header h1{
+  margin:0;
+  color:#ffd700;
+  font-size:28px;
+  font-weight:900;
+  text-transform:uppercase;
+  text-shadow:2px 2px 3px #500
+}
+
+.header p{
+  margin:7px 0 0;
+  font-weight:bold
+}
+
+.menu{
+  display:flex;
+  background:#222;
+  padding:6px;
+  gap:5px;
+  position:sticky;
+  top:0;
+  z-index:10
+}
+
+.menu button{
+  flex:1;
+  border:0;
+  padding:11px 4px;
+  border-radius:5px;
+  background:#555;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer
+}
+
+.menu button.active{
+  background:#d40000;
+  color:#ffd700;
+  border:1px solid #ffd700
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:10px
+}
+
+.notice{
+  background:#fff;
+  border-left:5px solid #d40000;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:5px;
+  font-weight:bold
+}
+
+.toolbar{
+  background:#fff;
+  padding:12px;
+  border-radius:7px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 1px 4px #0002
+}
+
+.date{
+  color:#b40000;
+  font-weight:bold
+}
+
+.update{
+  border:0;
+  background:#198754;
+  color:#fff;
+  padding:10px 13px;
+  border-radius:6px;
+  font-weight:bold
+}
+
+.status{
+  text-align:center;
+  padding:8px;
+  color:#555
+}
+
+.section-title{
+  background:linear-gradient(90deg,#d40000,#a00000);
+  color:#ffd700;
+  padding:10px;
+  border-radius:6px 6px 0 0;
+  font-weight:bold;
+  text-transform:uppercase
+}
+
+.stations{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:15px
+}
+
+.station{
+  background:#fff;
+  border-radius:7px;
+  overflow:hidden;
+  box-shadow:0 2px 6px #0003
+}
+
+.station-title{
+  background:#c40000;
+  color:#ffd700;
+  text-align:center;
+  padding:11px 5px;
+  font-weight:bold;
+  font-size:17px;
+  text-transform:uppercase
+}
+
+.prize{
+  display:flex;
+  border-bottom:1px solid #ddd;
+  min-height:38px;
+  align-items:center
+}
+
+.prize:last-child{
+  border-bottom:0
+}
+
+.label{
+  width:48px;
+  flex-shrink:0;
+  background:#f5f5f5;
+  text-align:center;
+  padding:9px 3px;
+  font-size:12px;
+  font-weight:bold;
+  color:#555;
+  border-right:1px solid #ddd
+}
+
+.number{
+  flex:1;
+  text-align:center;
+  padding:8px 3px;
+  font-weight:bold;
+  font-size:15px;
+  letter-spacing:1px;
+  word-break:break-word
+}
+
+.g8 .number{
+  color:#d00000;
+  font-size:19px
+}
+
+.db{
+  background:#fff4f4
+}
+
+.db .number{
+  color:#d00000;
+  font-size:23px;
+  font-weight:900
+}
+
+.stats{
+  background:#fff;
+  margin-top:15px;
+  border-radius:7px;
+  overflow:hidden;
+  box-shadow:0 2px 5px #0002
+}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:#ddd
+}
+
+.stat{
+  background:#fff;
+  padding:15px;
+  text-align:center
+}
+
+.stat b{
+  display:block;
+  color:#d00000;
+  font-size:24px;
+  margin-top:5px
+}
+
+.cross{
+  padding:15px;
+  text-align:center;
+  border-top:1px solid #ddd
+}
+
+.cross strong{
+  color:#d00000;
+  font-size:22px
+}
+
+.footer{
+  margin-top:15px;
+  background:#222;
+  color:#ddd;
+  text-align:center;
+  padding:18px 10px;
+  font-size:13px
+}
+
+@media(max-width:750px){
+  .stations{
+    grid-template-columns:1fr
+  }
+
+  .stats-grid{
+    grid-template-columns:1fr
+  }
+
+  .header h1{
+    font-size:23px
+  }
+
+  .toolbar{
+    flex-direction:column;
+    align-items:stretch
+  }
+
+  .update{
+    width:100%
+  }
+}
+</style>
 </head>
+
 <body>
 
-<header>
-  <h1>VÉ SỐ PHÁT ĐẠT</h1>
-  <div class="subtitle">SOI CẦU KẾT QUẢ XỔ SỐ 3 MIỀN</div>
+<header class="header">
+  <h1>🎯 VÉ SỐ PHÁT ĐẠT</h1>
+  <p>SOI CẦU XSMN • KẾT QUẢ XỔ SỐ MIỀN NAM</p>
 </header>
 
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchRegion('XSMN')">Miền Nam</button>
-  <button class="tab-btn" onclick="switchRegion('XSMT')">Miền Trung</button>
-  <button class="tab-btn" onclick="switchRegion('XSMB')">Miền Bắc</button>
-</div>
+<nav class="menu">
+  <button class="active" onclick="switchRegion('XSMN',this)">MIỀN NAM</button>
+  <button onclick="switchRegion('XSMT',this)">MIỀN TRUNG</button>
+  <button onclick="switchRegion('XSMB',this)">MIỀN BẮC</button>
+</nav>
 
-<div class="container">
+<main class="container">
+
+  <div class="notice">
+    📢 Kết quả xổ số được cập nhật tự động. Thông tin soi cầu chỉ mang tính thống kê, tham khảo.
+  </div>
+
   <div class="toolbar">
-    <div class="toolbar-date" id="date-display">Đang tải ngày...</div>
-    <button class="btn-update" onclick="updateData()">🔄 Cập nhật ngay</button>
+    <div class="date" id="date-display">ĐANG TẢI DỮ LIỆU...</div>
+    <button class="update" onclick="updateData()">🔄 CẬP NHẬT NGAY</button>
   </div>
-  
-  <div id="status-msg"></div>
-  <div id="results">
-    <!-- Giao diện từng đài sẽ được vẽ vào đây -->
-  </div>
-</div>
+
+  <div id="status" class="status">Đang tải dữ liệu...</div>
+
+  <div id="results"></div>
+
+  <section class="stats">
+    <div class="section-title">📊 THỐNG KÊ XỔ SỐ</div>
+
+    <div class="stats-grid">
+      <div class="stat">
+        Số ngày dữ liệu
+        <b id="totalDays">0</b>
+      </div>
+
+      <div class="stat">
+        Cập nhật gần nhất
+        <b id="lastUpdate">--</b>
+      </div>
+
+      <div class="stat">
+        Trạng thái
+        <b id="serverStatus">OK</b>
+      </div>
+    </div>
+
+    <div class="cross">
+      🔎 <b>Giao thoa tham khảo</b>
+      <div>
+        <strong id="crossNumbers">--</strong>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  © Vé Số Phát Đạt - Soi Cầu XSMN<br>
+  Dữ liệu mang tính tham khảo, không đảm bảo kết quả.
+</footer>
 
 <script>
-let currentData = null;
+let currentData=null;
 
-async function loadData() {
-  document.getElementById('status-msg').innerHTML = "Đang tải dữ liệu...";
-  try {
-    const data = await fetch('/api/results').then(r => r.json());
-    if(!data || !data.length) {
-      document.getElementById('results').innerHTML = '<div style="background:#fff;padding:20px;text-align:center;">Chưa có dữ liệu.</div>';
+function escapeHTML(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function formatNumbers(value){
+  return escapeHTML(String(value ?? "").trim())
+    .replace(/\s+/g," - ");
+}
+
+async function loadData(){
+
+  const status=document.getElementById("status");
+  status.textContent="Đang tải dữ liệu...";
+
+  try{
+
+    const response=await fetch("/api/results");
+    const data=await response.json();
+
+    if(!Array.isArray(data) || !data.length){
+      document.getElementById("results").innerHTML=
+        '<div class="notice">Chưa có dữ liệu xổ số.</div>';
+      status.textContent="";
       return;
     }
-    currentData = data[0]; 
-    
-    let dateText = currentData.updatedAt ? new Date(currentData.updatedAt).toLocaleDateString('vi-VN') : 'Hôm nay';
-    document.getElementById('date-display').innerText = 'KẾT QUẢ NGÀY ' + dateText;
-    
-    renderMienNam(currentData);
-    document.getElementById('status-msg').innerHTML = "";
-  } catch(e) {
-    document.getElementById('status-msg').innerHTML = "Lỗi kết nối máy chủ!";
+
+    currentData=data[0];
+
+    const date=currentData.updatedAt
+      ? new Date(currentData.updatedAt)
+          .toLocaleDateString("vi-VN")
+      : "Hôm nay";
+
+    document.getElementById("date-display").textContent=
+      "KẾT QUẢ NGÀY "+date;
+
+    document.getElementById("totalDays").textContent=data.length;
+
+    document.getElementById("lastUpdate").textContent=
+      currentData.updatedAt
+      ? new Date(currentData.updatedAt)
+          .toLocaleTimeString("vi-VN")
+      : "--";
+
+    renderResults(currentData);
+
+    status.textContent="Đã tải dữ liệu thành công.";
+
+  }catch(error){
+
+    console.error(error);
+
+    status.textContent="Không kết nối được máy chủ.";
+    document.getElementById("serverStatus").textContent="LỖI";
   }
 }
 
-function renderMienNam(dataObj) {
-  if(!dataObj || !dataObj.rows || dataObj.rows.length === 0) return;
-  
-  let rows = dataObj.rows;
-  let stations = [];
-  for (let i = 1; i < rows[0].length; i++) {
-     if(rows[0][i]) stations.push(rows[0][i]);
+function renderResults(data){
+
+  if(!data.rows || !data.rows.length){
+    document.getElementById("results").innerHTML=
+      '<div class="notice">Không có bảng kết quả.</div>';
+    return;
   }
 
-  let html = '<div class="stations-grid">';
-  
-  stations.forEach((station, index) => {
-    html += '<div class="station-card">';
-    html += '<div class="station-name">' + station + '</div>';
-    
-    for(let i = 1; i < rows.length; i++) {
-       let row = rows[i];
-       if (row[0] && (row[0].startsWith('G') || row[0].startsWith('Đ') || row[0].startsWith('M'))) {
-           let prizeName = row[0];
-           let prizeNums = row[index + 1] || ''; 
-           
-           let numClass = 'prize-nums';
-           if (prizeName === 'ĐB' || prizeName === 'Đặc Biệt') numClass += ' highlight-db';
-           else if (prizeName === 'G8') numClass += ' highlight-red';
-           
-           // Cập nhật quan trọng: Xóa khoảng trắng thừa 2 bên, sau đó gom nhiều khoảng trắng ở giữa thành 1 cụm " - "
-           let formattedNums = prizeNums.trim().replace(/\s+/g, ' - ');
-           
-           html += '<div class="prize-row">';
-           html += '<div class="prize-label">' + prizeName + '</div>';
-           html += '<div class="' + numClass + '">' + formattedNums + '</div>';
-           html += '</div>';
-       }
+  const rows=data.rows;
+
+  const stations=[];
+
+  for(let i=1;i<rows[0].length;i++){
+    if(rows[0][i]){
+      stations.push(rows[0][i]);
     }
-    html += '</div>';
+  }
+
+  let html=
+    '<div class="section-title">🎟️ KẾT QUẢ XỔ SỐ MIỀN NAM</div>'+
+    '<div class="stations">';
+
+  stations.forEach((station,index)=>{
+
+    html+='<div class="station">';
+
+    html+=
+      '<div class="station-title">'+
+      escapeHTML(station)+
+      '</div>';
+
+    for(let i=1;i<rows.length;i++){
+
+      const row=rows[i];
+
+      if(!row[0]) continue;
+
+      const prizeName=String(row[0]).trim();
+
+      if(
+        !prizeName.startsWith("G") &&
+        !prizeName.startsWith("Đ") &&
+        !prizeName.startsWith("M")
+      ) continue;
+
+      const number=row[index+1] || "";
+
+      let className="prize";
+
+      if(prizeName==="G8"){
+        className+=" g8";
+      }
+
+      if(
+        prizeName==="ĐB" ||
+        prizeName==="Đặc Biệt"
+      ){
+        className+=" db";
+      }
+
+      html+=
+        '<div class="'+className+'">'+
+          '<div class="label">'+
+            escapeHTML(prizeName)+
+          '</div>'+
+          '<div class="number">'+
+            formatNumbers(number)+
+          '</div>'+
+        '</div>';
+    }
+
+    html+="</div>";
   });
-  
-  html += '</div>';
-  document.getElementById('results').innerHTML = html;
+
+  html+="</div>";
+
+  document.getElementById("results").innerHTML=html;
 }
 
-function switchRegion(region) {
-  let btns = document.querySelectorAll('.tab-btn');
-  btns.forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  
-  if (region === 'XSMN') {
-    renderMienNam(currentData);
-  } else {
-    document.getElementById('results').innerHTML = '<div style="background:#fff;padding:40px;text-align:center;font-weight:bold;border-radius:8px;">Hệ thống đang nâng cấp dữ liệu cho ' + region + '.<br><br>Vui lòng chọn Miền Nam để xem!</div>';
+function switchRegion(region,button){
+
+  document
+    .querySelectorAll(".menu button")
+    .forEach(btn=>btn.classList.remove("active"));
+
+  button.classList.add("active");
+
+  if(region==="XSMN"){
+
+    if(currentData){
+      renderResults(currentData);
+    }
+
+  }else{
+
+    document.getElementById("results").innerHTML=
+      '<div class="notice" style="text-align:center">'+
+      '🚧 Dữ liệu '+region+
+      ' đang được nâng cấp.<br><br>'+
+      'Hiện hệ thống đang hiển thị kết quả Miền Nam.'+
+      '</div>';
   }
 }
 
-async function updateData() {
-  document.getElementById('status-msg').innerHTML = 'Hệ thống đang đồng bộ dữ liệu mới...';
-  try {
-    await fetch('/api/update', {method:'POST'});
-    setTimeout(loadData, 2000); 
-  } catch(e) {
-    alert("Có lỗi khi cập nhật!");
+async function updateData(){
+
+  const status=document.getElementById("status");
+
+  status.textContent="Đang đồng bộ dữ liệu mới...";
+
+  try{
+
+    const response=await fetch(
+      "/api/update",
+      {method:"POST"}
+    );
+
+    const result=await response.json();
+
+    if(result.ok){
+
+      status.textContent=
+        "Cập nhật thành công. Đang tải lại...";
+
+      setTimeout(loadData,1000);
+
+    }else{
+
+      status.textContent="Cập nhật thất bại.";
+    }
+
+  }catch(error){
+
+    status.textContent=
+      "Không thể cập nhật dữ liệu.";
   }
 }
 
