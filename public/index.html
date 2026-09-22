@@ -4,167 +4,251 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vé Số Phát Đạt - Soi Cầu XSMN</title>
+
   <style>
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Arial,sans-serif;
-      background:#f5f5f5;
-      color:#222
+    * {
+      box-sizing: border-box;
     }
-    header{
-      background:linear-gradient(135deg,#b40000,#e00000);
-      color:#fff;
-      padding:18px 12px;
-      text-align:center
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #222;
     }
-    header h1{
-      margin:0;
-      font-size:24px
+
+    header {
+      background: linear-gradient(135deg, #b40000, #e00000);
+      color: #fff;
+      text-align: center;
+      padding: 14px 10px;
+      box-shadow: 0 2px 8px #999;
     }
-    header p{
-      margin:6px 0 0;
-      font-size:14px
+
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
     }
-    .tabs{
-      display:flex;
-      background:#8b0000;
-      overflow:hidden
+
+    header p {
+      margin: 5px 0 0;
+      font-size: 13px;
     }
-    .tabs button{
-      flex:1;
-      border:0;
-      padding:13px 5px;
-      background:#8b0000;
-      color:#fff;
-      font-weight:bold;
-      cursor:pointer
+
+    .tabs {
+      display: flex;
+      gap: 5px;
+      padding: 8px;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 5px #bbb;
     }
-    .tabs button.active{
-      background:#ffd700;
-      color:#8b0000
+
+    .tabs button {
+      flex: 1;
+      border: 0;
+      border-radius: 6px;
+      padding: 10px 5px;
+      font-weight: bold;
+      background: #eee;
+      color: #555;
+      cursor: pointer;
     }
-    .container{
-      max-width:1100px;
-      margin:auto;
-      padding:12px
+
+    .tabs button.active {
+      background: #c40000;
+      color: #fff;
     }
-    .notice{
-      background:#fff8d8;
-      border:1px solid #e0c85a;
-      border-radius:10px;
-      padding:12px;
-      margin-bottom:12px;
-      font-size:14px
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 10px;
     }
-    .control{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-bottom:15px
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
     }
-    .control button{
-      border:0;
-      border-radius:8px;
-      padding:12px 16px;
-      background:#c40000;
-      color:#fff;
-      font-weight:bold;
-      cursor:pointer
+
+    .title {
+      font-weight: bold;
+      color: #a90000;
+      font-size: 18px;
     }
-    .control button:active{
-      transform:scale(.98)
+
+    .update {
+      border: 0;
+      background: #c40000;
+      color: white;
+      border-radius: 6px;
+      padding: 9px 12px;
+      font-weight: bold;
+      cursor: pointer;
     }
-    #status{
-      font-size:13px;
-      padding:5px 0
+
+    .status {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 10px;
     }
-    .section-title{
-      background:#c40000;
-      color:#fff;
-      padding:12px;
-      border-radius:8px;
-      margin:15px 0 10px;
-      font-size:18px;
-      font-weight:bold
+
+    .station {
+      background: white;
+      border-radius: 9px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 5px #ccc;
     }
-    .stations{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:12px
+
+    .station-head {
+      background: #fff4d6;
+      border-bottom: 1px solid #e4c76a;
+      padding: 10px 12px;
     }
-    .station{
-      background:#fff;
-      border-radius:10px;
-      overflow:hidden;
-      box-shadow:0 2px 7px #ccc
+
+    .station-name {
+      color: #a50000;
+      font-size: 18px;
+      font-weight: 800;
     }
-    .station h3{
-      margin:0;
-      padding:12px;
-      background:#ffe0e0;
-      color:#a00000;
-      text-align:center
+
+    .station-date {
+      color: #666;
+      font-size: 13px;
+      margin-top: 3px;
     }
-    table{
-      width:100%;
-      border-collapse:collapse
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
-    th,td{
-      border-bottom:1px solid #eee;
-      padding:8px;
-      text-align:center;
-      font-size:14px
+
+    td {
+      border-bottom: 1px solid #eee;
+      padding: 8px 7px;
+      vertical-align: top;
     }
-    th{
-      background:#fafafa
+
+    td:first-child {
+      width: 42px;
+      text-align: center;
+      font-weight: bold;
+      color: #a00000;
+      background: #fafafa;
     }
-    .db{
-      font-size:24px;
-      font-weight:bold;
-      color:#c40000
+
+    td:last-child {
+      font-weight: 600;
+      word-break: break-word;
+      line-height: 1.5;
     }
-    .analysis{
-      background:#fff;
-      border-radius:10px;
-      padding:14px;
-      margin-top:15px;
-      box-shadow:0 2px 7px #ddd
+
+    .special td {
+      background: #fff1b8;
+      color: #c00000;
+      font-size: 18px;
+      font-weight: 800;
     }
-    .analysis h3{
-      color:#b00000;
-      margin-top:0
+
+    .view {
+      display: block;
+      width: calc(100% - 20px);
+      margin: 10px;
+      border: 0;
+      background: #b40000;
+      color: #fff;
+      border-radius: 6px;
+      padding: 10px;
+      font-weight: bold;
+      cursor: pointer;
     }
-    .numbers{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin-top:8px
+
+    .detail {
+      display: none;
     }
-    .num{
-      background:#c40000;
-      color:#fff;
-      padding:5px 9px;
-      border-radius:15px;
-      font-weight:bold
+
+    .back {
+      border: 0;
+      background: #555;
+      color: #fff;
+      padding: 9px 14px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      cursor: pointer;
     }
-    .hidden{
-      display:none
+
+    .detail-title {
+      background: #fff4d6;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #e4c76a;
     }
-    footer{
-      text-align:center;
-      color:#777;
-      font-size:12px;
-      padding:25px 10px
+
+    .detail-title h2 {
+      margin: 0;
+      color: #a50000;
+      font-size: 20px;
     }
-    @media(max-width:600px){
-      header h1{font-size:21px}
-      .stations{
-        grid-template-columns:1fr
+
+    .detail-title p {
+      margin: 5px 0 0;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .stats {
+      background: white;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+      box-shadow: 0 1px 5px #ccc;
+    }
+
+    .stats h3 {
+      margin: 0 0 8px;
+      color: #a50000;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      padding: 7px 0;
+      font-size: 14px;
+    }
+
+    .empty {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      color: #777;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 25px;
+      color: #777;
+    }
+
+    @media (min-width: 700px) {
+      .stations-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
       }
-      th,td{
-        padding:7px 4px;
-        font-size:13px
+
+      .station {
+        margin-bottom: 0;
       }
     }
   </style>
@@ -173,319 +257,423 @@
 <body>
 
 <header>
-  <h1>🎯 VÉ SỐ PHÁT ĐẠT</h1>
-  <p>Soi cầu - Thống kê Xổ Số Miền Nam</p>
+  <h1>VÉ SỐ PHÁT ĐẠT</h1>
+  <p>SOI CẦU XSMN</p>
 </header>
 
 <div class="tabs">
-  <button id="tab-mn" class="active" onclick="showRegion('mn')">
+  <button class="active" onclick="changeRegion('mn', this)">
     MIỀN NAM
   </button>
-  <button id="tab-mt" onclick="showRegion('mt')">
+
+  <button onclick="changeRegion('mt', this)">
     MIỀN TRUNG
   </button>
-  <button id="tab-mb" onclick="showRegion('mb')">
+
+  <button onclick="changeRegion('mb', this)">
     MIỀN BẮC
   </button>
 </div>
 
 <div class="container">
 
-  <div class="notice">
-    ⚠️ Dữ liệu được tổng hợp tự động từ nguồn kết quả xổ số.
-    Nội dung thống kê chỉ mang tính tham khảo, không đảm bảo kết quả.
+  <div id="listView">
+
+    <div class="topbar">
+      <div class="title" id="regionTitle">
+        XỔ SỐ MIỀN NAM
+      </div>
+
+      <button class="update" onclick="updateData()">
+        CẬP NHẬT
+      </button>
+    </div>
+
+    <div class="status" id="status">
+      Đang tải dữ liệu...
+    </div>
+
+    <div id="stations" class="stations-grid">
+      <div class="loading">
+        Đang tải kết quả...
+      </div>
+    </div>
+
   </div>
 
-  <div class="control">
-    <button onclick="updateData()">🔄 CẬP NHẬT NGAY</button>
-    <div id="status">Đang kiểm tra dữ liệu...</div>
-  </div>
+  <div id="detailView" class="detail">
 
-  <div id="mn" class="region"></div>
-  <div id="mt" class="region hidden"></div>
-  <div id="mb" class="region hidden"></div>
+    <button class="back" onclick="showList()">
+      ← QUAY LẠI
+    </button>
+
+    <div id="detailContent"></div>
+
+  </div>
 
 </div>
 
-<footer>
-  © Vé Số Phát Đạt - Soi Cầu XSMN
-</footer>
-
 <script>
+
 let currentRegion = "mn";
 
-function showRegion(region){
+const regionNames = {
+  mn: "XỔ SỐ MIỀN NAM",
+  mt: "XỔ SỐ MIỀN TRUNG",
+  mb: "XỔ SỐ MIỀN BẮC"
+};
+
+function escapeHtml(text) {
+  return String(text ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function formatValue(value) {
+  return escapeHtml(value || "");
+}
+
+function changeRegion(region, button) {
+
   currentRegion = region;
 
-  document.querySelectorAll(".region").forEach(el=>{
-    el.classList.add("hidden");
-  });
+  document.querySelectorAll(".tabs button")
+    .forEach(btn => btn.classList.remove("active"));
 
-  document.getElementById(region).classList.remove("hidden");
+  button.classList.add("active");
 
-  document.querySelectorAll(".tabs button").forEach(btn=>{
-    btn.classList.remove("active");
-  });
+  document.getElementById("regionTitle").textContent =
+    regionNames[region];
 
-  document.getElementById("tab-"+region).classList.add("active");
+  showList();
 
-  loadRegion(region);
+  loadResults();
 }
 
-async function loadRegion(region){
-  const box = document.getElementById(region);
-  box.innerHTML = "<div class='analysis'>⏳ Đang tải dữ liệu...</div>";
+async function loadResults() {
 
-  try{
-    const res = await fetch("/api/results?region="+region);
-    const data = await res.json();
+  const box = document.getElementById("stations");
 
-    renderRegion(region,data);
+  box.innerHTML =
+    '<div class="loading">Đang tải kết quả...</div>';
 
-  }catch(error){
+  try {
+
+    const response =
+      await fetch(`/api/results?region=${currentRegion}`);
+
+    const data = await response.json();
+
+    const results = data.results || [];
+
+    document.getElementById("status").textContent =
+      results.length
+        ? `Có ${results.length} đài • Cập nhật ${formatTime(data.updatedAt)}`
+        : "Chưa có dữ liệu.";
+
+    if (!results.length) {
+
+      box.innerHTML =
+        '<div class="empty">Chưa có dữ liệu kết quả.</div>';
+
+      return;
+    }
+
     box.innerHTML =
-      "<div class='analysis'>❌ Không tải được dữ liệu. Hãy bấm CẬP NHẬT NGAY.</div>";
+      results.map((item, index) =>
+        stationCard(item, index)
+      ).join("");
+
+  } catch (error) {
+
+    console.error(error);
+
+    box.innerHTML =
+      '<div class="empty">Không tải được dữ liệu.</div>';
+
+    document.getElementById("status").textContent =
+      "Lỗi kết nối dữ liệu.";
   }
 }
 
-function renderRegion(region,data){
+function stationCard(item, index) {
 
-  const box = document.getElementById(region);
+  const rows = item.rows || [];
 
-  let title = "";
+  return `
+    <div class="station">
 
-  if(region==="mn"){
-    title = "KẾT QUẢ XỔ SỐ MIỀN NAM";
-  }
+      <div class="station-head">
 
-  if(region==="mt"){
-    title = "KẾT QUẢ XỔ SỐ MIỀN TRUNG";
-  }
+        <div class="station-name">
+          ${escapeHtml(item.station)}
+        </div>
 
-  if(region==="mb"){
-    title = "KẾT QUẢ XỔ SỐ MIỀN BẮC";
-  }
+        <div class="station-date">
+          ${escapeHtml(item.weekday || "")}
+          ${item.weekday && item.displayDate ? " • " : ""}
+          ${escapeHtml(item.displayDate || "")}
+        </div>
 
-  let html =
-    "<div class='section-title'>"+title+"</div>";
+      </div>
 
-  if(!data || !data.length){
-    html +=
-      "<div class='analysis'>Chưa có dữ liệu. Hãy bấm CẬP NHẬT NGAY.</div>";
-    box.innerHTML = html;
-    return;
-  }
+      <table>
 
-  html += "<div class='stations'>";
+        <tbody>
 
-  data.forEach(station=>{
+          ${rows.map(row => {
 
-    html += "<div class='station'>";
+            const special =
+              row.label === "ĐB";
 
-    html +=
-      "<h3>"+escapeHtml(station.station || "Đài xổ số")+"</h3>";
+            return `
+              <tr class="${special ? "special" : ""}">
 
-    html += "<table>";
+                <td>
+                  ${escapeHtml(row.label)}
+                </td>
 
-    if(station.rows && station.rows.length){
+                <td>
+                  ${formatValue(row.value)}
+                </td>
 
-      station.rows.forEach(row=>{
+              </tr>
+            `;
 
-        html += "<tr>";
+          }).join("")}
 
-        row.forEach((cell,index)=>{
+        </tbody>
 
-          const tag = index===0 ? "th" : "td";
+      </table>
 
-          let value = escapeHtml(String(cell));
+      <button
+        class="view"
+        onclick="viewStation(${index})">
 
-          if(String(cell).length>=5 && index>0){
-            value =
-              "<span class='db'>"+value+"</span>";
-          }
+        XEM TỪNG ĐÀI ›
 
-          html += "<"+tag+">"+value+"</"+tag+">";
-        });
+      </button>
 
-        html += "</tr>";
-      });
-
-    }else{
-
-      html +=
-        "<tr><td>Chưa có kết quả</td></tr>";
-    }
-
-    html += "</table>";
-    html += "</div>";
-  });
-
-  html += "</div>";
-
-  loadAnalysis(region).then(analysis=>{
-
-    html += analysis;
-
-    box.innerHTML = html;
-
-  }).catch(()=>{
-
-    box.innerHTML = html;
-  });
+    </div>
+  `;
 }
 
-async function loadAnalysis(region){
+let currentResults = [];
 
-  try{
+async function viewStation(index) {
 
-    const res =
-      await fetch("/api/analyze?region="+region);
+  try {
 
-    const data = await res.json();
+    const response =
+      await fetch(`/api/results?region=${currentRegion}`);
 
-    let html =
-      "<div class='analysis'>";
+    const data = await response.json();
 
-    html +=
-      "<h3>📊 THỐNG KÊ THAM KHẢO</h3>";
+    currentResults = data.results || [];
 
-    if(data.totalPoint !== undefined){
+    const item = currentResults[index];
 
-      html +=
-        "<p><b>Cầu tổng:</b> "+
-        escapeHtml(String(data.totalPoint))+
-        "</p>";
-    }
+    if (!item) return;
 
-    if(data.heads){
+    let analysis = null;
 
-      html += "<p><b>Đầu:</b></p>";
-      html += "<div class='numbers'>";
+    try {
 
-      Object.keys(data.heads)
-        .sort((a,b)=>data.heads[b]-data.heads[a])
-        .slice(0,10)
-        .forEach(n=>{
-          html +=
-            "<span class='num'>"+
-            n+" ("+data.heads[n]+")</span>";
-        });
+      const a =
+        await fetch(
+          `/api/station?region=${currentRegion}&station=${encodeURIComponent(item.station)}`
+        );
 
-      html += "</div>";
-    }
+      if (a.ok) {
+        analysis = await a.json();
+      }
 
-    if(data.tails){
+    } catch (e) {}
 
-      html += "<p><b>Đuôi:</b></p>";
-      html += "<div class='numbers'>";
+    showDetail(item, analysis);
 
-      Object.keys(data.tails)
-        .sort((a,b)=>data.tails[b]-data.tails[a])
-        .slice(0,10)
-        .forEach(n=>{
-          html +=
-            "<span class='num'>"+
-            n+" ("+data.tails[n]+")</span>";
-        });
+  } catch (error) {
 
-      html += "</div>";
-    }
+    alert("Không tải được dữ liệu đài.");
 
-    if(data.overlap && data.overlap.length){
-
-      html +=
-        "<p><b>🔗 Giao thoa liên đài:</b></p>";
-
-      html += "<div class='numbers'>";
-
-      data.overlap.forEach(n=>{
-
-        html +=
-          "<span class='num'>"+n+"</span>";
-      });
-
-      html += "</div>";
-    }
-
-    html += "</div>";
-
-    return html;
-
-  }catch(e){
-
-    return "";
   }
 }
 
-async function updateData(){
+function showDetail(item, data) {
+
+  document.getElementById("listView").style.display =
+    "none";
+
+  document.getElementById("detailView").style.display =
+    "block";
+
+  const analysis =
+    data && data.analysis
+      ? data.analysis
+      : null;
+
+  document.getElementById("detailContent").innerHTML = `
+
+    <div class="detail-title">
+
+      <h2>
+        ${escapeHtml(item.station)}
+      </h2>
+
+      <p>
+        ${escapeHtml(item.weekday || "")}
+        ${item.weekday && item.displayDate ? " • " : ""}
+        ${escapeHtml(item.displayDate || "")}
+      </p>
+
+    </div>
+
+    <div class="station">
+
+      <table>
+
+        <tbody>
+
+          ${(item.rows || []).map(row => {
+
+            const special =
+              row.label === "ĐB";
+
+            return `
+              <tr class="${special ? "special" : ""}">
+
+                <td>
+                  ${escapeHtml(row.label)}
+                </td>
+
+                <td>
+                  ${formatValue(row.value)}
+                </td>
+
+              </tr>
+            `;
+
+          }).join("")}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    ${
+      analysis
+        ? `
+          <div class="stats">
+
+            <h3>
+              THỐNG KÊ ${escapeHtml(item.station)}
+            </h3>
+
+            <div class="stat-row">
+              <span>Ngày thống kê</span>
+              <b>${escapeHtml(analysis.date || "")}</b>
+            </div>
+
+            <div class="stat-row">
+              <span>Tổng số điểm</span>
+              <b>${analysis.totalPoint || 0}</b>
+            </div>
+
+            <div class="stat-row">
+              <span>Đầu xuất hiện</span>
+              <b>${formatCounts(analysis.head)}</b>
+            </div>
+
+            <div class="stat-row">
+              <span>Đuôi xuất hiện</span>
+              <b>${formatCounts(analysis.tail)}</b>
+            </div>
+
+          </div>
+        `
+        : ""
+    }
+
+  `;
+}
+
+function formatCounts(obj) {
+
+  if (!obj) return "";
+
+  return Object.entries(obj)
+    .sort((a, b) => b[1] - a[1])
+    .map(([key, value]) => `${key}: ${value}`)
+    .join(" • ");
+}
+
+function showList() {
+
+  document.getElementById("detailView").style.display =
+    "none";
+
+  document.getElementById("listView").style.display =
+    "block";
+}
+
+async function updateData() {
 
   const status =
     document.getElementById("status");
 
-  status.innerText =
-    "⏳ Đang cập nhật dữ liệu...";
+  status.textContent =
+    "Đang cập nhật dữ liệu...";
 
-  try{
+  try {
 
-    const res =
-      await fetch("/api/update");
+    const response =
+      await fetch("/api/update", {
+        method: "POST"
+      });
 
     const data =
-      await res.json();
+      await response.json();
 
-    if(data.success){
+    if (data.ok) {
 
-      status.innerText =
-        "✅ Đã cập nhật dữ liệu thành công.";
+      status.textContent =
+        "Đã cập nhật dữ liệu thành công.";
 
-      loadRegion(currentRegion);
+      await loadResults();
 
-    }else{
+    } else {
 
-      status.innerText =
-        "⚠️ Chưa cập nhật được dữ liệu.";
+      status.textContent =
+        "Cập nhật không thành công.";
     }
 
-  }catch(error){
+  } catch (error) {
 
-    status.innerText =
-      "❌ Lỗi kết nối máy chủ.";
+    status.textContent =
+      "Lỗi khi cập nhật dữ liệu.";
   }
 }
 
-function escapeHtml(value){
+function formatTime(value) {
 
-  return value
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (isNaN(date.getTime())) return "";
+
+  return date.toLocaleTimeString("vi-VN", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 }
 
-async function checkStatus(){
+loadResults();
 
-  try{
-
-    const res =
-      await fetch("/api/status");
-
-    const data =
-      await res.json();
-
-    document.getElementById("status").innerText =
-      data.message ||
-      "✅ Máy chủ đang hoạt động.";
-
-  }catch(e){
-
-    document.getElementById("status").innerText =
-      "⚠️ Đang chờ máy chủ...";
-  }
-}
-
-checkStatus();
-loadRegion("mn");
 </script>
 
 </body>
