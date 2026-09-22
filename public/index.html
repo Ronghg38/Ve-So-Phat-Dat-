@@ -1,338 +1,461 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vé Số Phát Đạt - Soi Cầu XSMN</title>
-
-<style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f1f1f1;
-  color:#222
-}
-
-.header{
-  background:linear-gradient(180deg,#d40000,#8b0000);
-  color:#fff;
-  text-align:center;
-  padding:15px 10px;
-  border-bottom:4px solid #ffd700
-}
-
-.header h1{
-  margin:0;
-  color:#ffd700;
-  font-size:28px;
-  font-weight:900;
-  text-transform:uppercase;
-  text-shadow:2px 2px 3px #500
-}
-
-.header p{
-  margin:7px 0 0;
-  font-weight:bold
-}
-
-.menu{
-  display:flex;
-  background:#222;
-  padding:6px;
-  gap:5px;
-  position:sticky;
-  top:0;
-  z-index:10
-}
-
-.menu button{
-  flex:1;
-  border:0;
-  padding:11px 4px;
-  border-radius:5px;
-  background:#555;
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer
-}
-
-.menu button.active{
-  background:#d40000;
-  color:#ffd700;
-  border:1px solid #ffd700
-}
-
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:10px
-}
-
-.notice{
-  background:#fff;
-  border-left:5px solid #d40000;
-  padding:12px;
-  margin-bottom:10px;
-  border-radius:5px;
-  font-weight:bold
-}
-
-.toolbar{
-  background:#fff;
-  padding:12px;
-  border-radius:7px;
-  margin-bottom:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  box-shadow:0 1px 4px #0002
-}
-
-.date{
-  color:#b40000;
-  font-weight:bold
-}
-
-.update{
-  border:0;
-  background:#198754;
-  color:#fff;
-  padding:10px 13px;
-  border-radius:6px;
-  font-weight:bold
-}
-
-.status{
-  text-align:center;
-  padding:8px;
-  color:#555
-}
-
-.section-title{
-  background:linear-gradient(90deg,#d40000,#a00000);
-  color:#ffd700;
-  padding:10px;
-  border-radius:6px 6px 0 0;
-  font-weight:bold;
-  text-transform:uppercase
-}
-
-.stations{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-bottom:15px
-}
-
-.station{
-  background:#fff;
-  border-radius:7px;
-  overflow:hidden;
-  box-shadow:0 2px 6px #0003
-}
-
-.station-title{
-  background:#c40000;
-  color:#ffd700;
-  text-align:center;
-  padding:11px 5px;
-  font-weight:bold;
-  font-size:17px;
-  text-transform:uppercase
-}
-
-.prize{
-  display:flex;
-  border-bottom:1px solid #ddd;
-  min-height:38px;
-  align-items:center
-}
-
-.prize:last-child{
-  border-bottom:0
-}
-
-.label{
-  width:48px;
-  flex-shrink:0;
-  background:#f5f5f5;
-  text-align:center;
-  padding:9px 3px;
-  font-size:12px;
-  font-weight:bold;
-  color:#555;
-  border-right:1px solid #ddd
-}
-
-.number{
-  flex:1;
-  text-align:center;
-  padding:8px 3px;
-  font-weight:bold;
-  font-size:15px;
-  letter-spacing:1px;
-  word-break:break-word
-}
-
-.g8 .number{
-  color:#d00000;
-  font-size:19px
-}
-
-.db{
-  background:#fff4f4
-}
-
-.db .number{
-  color:#d00000;
-  font-size:23px;
-  font-weight:900
-}
-
-.stats{
-  background:#fff;
-  margin-top:15px;
-  border-radius:7px;
-  overflow:hidden;
-  box-shadow:0 2px 5px #0002
-}
-
-.stats-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1px;
-  background:#ddd
-}
-
-.stat{
-  background:#fff;
-  padding:15px;
-  text-align:center
-}
-
-.stat b{
-  display:block;
-  color:#d00000;
-  font-size:24px;
-  margin-top:5px
-}
-
-.cross{
-  padding:15px;
-  text-align:center;
-  border-top:1px solid #ddd
-}
-
-.cross strong{
-  color:#d00000;
-  font-size:22px
-}
-
-.footer{
-  margin-top:15px;
-  background:#222;
-  color:#ddd;
-  text-align:center;
-  padding:18px 10px;
-  font-size:13px
-}
-
-@media(max-width:750px){
-  .stations{
-    grid-template-columns:1fr
-  }
-
-  .stats-grid{
-    grid-template-columns:1fr
-  }
-
-  .header h1{
-    font-size:23px
-  }
-
-  .toolbar{
-    flex-direction:column;
-    align-items:stretch
-  }
-
-  .update{
-    width:100%
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vé Số Phát Đạt - Soi Cầu XSMN</title>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:#f5f5f5;
+      color:#222
+    }
+    header{
+      background:linear-gradient(135deg,#b40000,#e00000);
+      color:#fff;
+      padding:18px 12px;
+      text-align:center
+    }
+    header h1{
+      margin:0;
+      font-size:24px
+    }
+    header p{
+      margin:6px 0 0;
+      font-size:14px
+    }
+    .tabs{
+      display:flex;
+      background:#8b0000;
+      overflow:hidden
+    }
+    .tabs button{
+      flex:1;
+      border:0;
+      padding:13px 5px;
+      background:#8b0000;
+      color:#fff;
+      font-weight:bold;
+      cursor:pointer
+    }
+    .tabs button.active{
+      background:#ffd700;
+      color:#8b0000
+    }
+    .container{
+      max-width:1100px;
+      margin:auto;
+      padding:12px
+    }
+    .notice{
+      background:#fff8d8;
+      border:1px solid #e0c85a;
+      border-radius:10px;
+      padding:12px;
+      margin-bottom:12px;
+      font-size:14px
+    }
+    .control{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:15px
+    }
+    .control button{
+      border:0;
+      border-radius:8px;
+      padding:12px 16px;
+      background:#c40000;
+      color:#fff;
+      font-weight:bold;
+      cursor:pointer
+    }
+    .control button:active{
+      transform:scale(.98)
+    }
+    #status{
+      font-size:13px;
+      padding:5px 0
+    }
+    .section-title{
+      background:#c40000;
+      color:#fff;
+      padding:12px;
+      border-radius:8px;
+      margin:15px 0 10px;
+      font-size:18px;
+      font-weight:bold
+    }
+    .stations{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:12px
+    }
+    .station{
+      background:#fff;
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow:0 2px 7px #ccc
+    }
+    .station h3{
+      margin:0;
+      padding:12px;
+      background:#ffe0e0;
+      color:#a00000;
+      text-align:center
+    }
+    table{
+      width:100%;
+      border-collapse:collapse
+    }
+    th,td{
+      border-bottom:1px solid #eee;
+      padding:8px;
+      text-align:center;
+      font-size:14px
+    }
+    th{
+      background:#fafafa
+    }
+    .db{
+      font-size:24px;
+      font-weight:bold;
+      color:#c40000
+    }
+    .analysis{
+      background:#fff;
+      border-radius:10px;
+      padding:14px;
+      margin-top:15px;
+      box-shadow:0 2px 7px #ddd
+    }
+    .analysis h3{
+      color:#b00000;
+      margin-top:0
+    }
+    .numbers{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:8px
+    }
+    .num{
+      background:#c40000;
+      color:#fff;
+      padding:5px 9px;
+      border-radius:15px;
+      font-weight:bold
+    }
+    .hidden{
+      display:none
+    }
+    footer{
+      text-align:center;
+      color:#777;
+      font-size:12px;
+      padding:25px 10px
+    }
+    @media(max-width:600px){
+      header h1{font-size:21px}
+      .stations{
+        grid-template-columns:1fr
+      }
+      th,td{
+        padding:7px 4px;
+        font-size:13px
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="header">
+<header>
   <h1>🎯 VÉ SỐ PHÁT ĐẠT</h1>
-  <p>SOI CẦU XSMN • KẾT QUẢ XỔ SỐ MIỀN NAM</p>
+  <p>Soi cầu - Thống kê Xổ Số Miền Nam</p>
 </header>
 
-<nav class="menu">
-  <button class="active" onclick="switchRegion('XSMN',this)">MIỀN NAM</button>
-  <button onclick="switchRegion('XSMT',this)">MIỀN TRUNG</button>
-  <button onclick="switchRegion('XSMB',this)">MIỀN BẮC</button>
-</nav>
+<div class="tabs">
+  <button id="tab-mn" class="active" onclick="showRegion('mn')">
+    MIỀN NAM
+  </button>
+  <button id="tab-mt" onclick="showRegion('mt')">
+    MIỀN TRUNG
+  </button>
+  <button id="tab-mb" onclick="showRegion('mb')">
+    MIỀN BẮC
+  </button>
+</div>
 
-<main class="container">
+<div class="container">
 
   <div class="notice">
-    📢 Kết quả xổ số được cập nhật tự động. Thông tin soi cầu chỉ mang tính thống kê, tham khảo.
+    ⚠️ Dữ liệu được tổng hợp tự động từ nguồn kết quả xổ số.
+    Nội dung thống kê chỉ mang tính tham khảo, không đảm bảo kết quả.
   </div>
 
-  <div class="toolbar">
-    <div class="date" id="date-display">ĐANG TẢI DỮ LIỆU...</div>
-    <button class="update" onclick="updateData()">🔄 CẬP NHẬT NGAY</button>
+  <div class="control">
+    <button onclick="updateData()">🔄 CẬP NHẬT NGAY</button>
+    <div id="status">Đang kiểm tra dữ liệu...</div>
   </div>
 
-  <div id="status" class="status">Đang tải dữ liệu...</div>
+  <div id="mn" class="region"></div>
+  <div id="mt" class="region hidden"></div>
+  <div id="mb" class="region hidden"></div>
 
-  <div id="results"></div>
+</div>
 
-  <section class="stats">
-    <div class="section-title">📊 THỐNG KÊ XỔ SỐ</div>
-
-    <div class="stats-grid">
-      <div class="stat">
-        Số ngày dữ liệu
-        <b id="totalDays">0</b>
-      </div>
-
-      <div class="stat">
-        Cập nhật gần nhất
-        <b id="lastUpdate">--</b>
-      </div>
-
-      <div class="stat">
-        Trạng thái
-        <b id="serverStatus">OK</b>
-      </div>
-    </div>
-
-    <div class="cross">
-      🔎 <b>Giao thoa tham khảo</b>
-      <div>
-        <strong id="crossNumbers">--</strong>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="footer">
-  © Vé Số Phát Đạt - Soi Cầu XSMN<br>
-  Dữ liệu mang tính tham khảo, không đảm bảo kết quả.
+<footer>
+  © Vé Số Phát Đạt - Soi Cầu XSMN
 </footer>
 
 <script>
-let currentData=null;
+let currentRegion = "mn";
 
-function escapeHTML(value){
-  return String(value ?? "")
+function showRegion(region){
+  currentRegion = region;
+
+  document.querySelectorAll(".region").forEach(el=>{
+    el.classList.add("hidden");
+  });
+
+  document.getElementById(region).classList.remove("hidden");
+
+  document.querySelectorAll(".tabs button").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  document.getElementById("tab-"+region).classList.add("active");
+
+  loadRegion(region);
+}
+
+async function loadRegion(region){
+  const box = document.getElementById(region);
+  box.innerHTML = "<div class='analysis'>⏳ Đang tải dữ liệu...</div>";
+
+  try{
+    const res = await fetch("/api/results?region="+region);
+    const data = await res.json();
+
+    renderRegion(region,data);
+
+  }catch(error){
+    box.innerHTML =
+      "<div class='analysis'>❌ Không tải được dữ liệu. Hãy bấm CẬP NHẬT NGAY.</div>";
+  }
+}
+
+function renderRegion(region,data){
+
+  const box = document.getElementById(region);
+
+  let title = "";
+
+  if(region==="mn"){
+    title = "KẾT QUẢ XỔ SỐ MIỀN NAM";
+  }
+
+  if(region==="mt"){
+    title = "KẾT QUẢ XỔ SỐ MIỀN TRUNG";
+  }
+
+  if(region==="mb"){
+    title = "KẾT QUẢ XỔ SỐ MIỀN BẮC";
+  }
+
+  let html =
+    "<div class='section-title'>"+title+"</div>";
+
+  if(!data || !data.length){
+    html +=
+      "<div class='analysis'>Chưa có dữ liệu. Hãy bấm CẬP NHẬT NGAY.</div>";
+    box.innerHTML = html;
+    return;
+  }
+
+  html += "<div class='stations'>";
+
+  data.forEach(station=>{
+
+    html += "<div class='station'>";
+
+    html +=
+      "<h3>"+escapeHtml(station.station || "Đài xổ số")+"</h3>";
+
+    html += "<table>";
+
+    if(station.rows && station.rows.length){
+
+      station.rows.forEach(row=>{
+
+        html += "<tr>";
+
+        row.forEach((cell,index)=>{
+
+          const tag = index===0 ? "th" : "td";
+
+          let value = escapeHtml(String(cell));
+
+          if(String(cell).length>=5 && index>0){
+            value =
+              "<span class='db'>"+value+"</span>";
+          }
+
+          html += "<"+tag+">"+value+"</"+tag+">";
+        });
+
+        html += "</tr>";
+      });
+
+    }else{
+
+      html +=
+        "<tr><td>Chưa có kết quả</td></tr>";
+    }
+
+    html += "</table>";
+    html += "</div>";
+  });
+
+  html += "</div>";
+
+  loadAnalysis(region).then(analysis=>{
+
+    html += analysis;
+
+    box.innerHTML = html;
+
+  }).catch(()=>{
+
+    box.innerHTML = html;
+  });
+}
+
+async function loadAnalysis(region){
+
+  try{
+
+    const res =
+      await fetch("/api/analyze?region="+region);
+
+    const data = await res.json();
+
+    let html =
+      "<div class='analysis'>";
+
+    html +=
+      "<h3>📊 THỐNG KÊ THAM KHẢO</h3>";
+
+    if(data.totalPoint !== undefined){
+
+      html +=
+        "<p><b>Cầu tổng:</b> "+
+        escapeHtml(String(data.totalPoint))+
+        "</p>";
+    }
+
+    if(data.heads){
+
+      html += "<p><b>Đầu:</b></p>";
+      html += "<div class='numbers'>";
+
+      Object.keys(data.heads)
+        .sort((a,b)=>data.heads[b]-data.heads[a])
+        .slice(0,10)
+        .forEach(n=>{
+          html +=
+            "<span class='num'>"+
+            n+" ("+data.heads[n]+")</span>";
+        });
+
+      html += "</div>";
+    }
+
+    if(data.tails){
+
+      html += "<p><b>Đuôi:</b></p>";
+      html += "<div class='numbers'>";
+
+      Object.keys(data.tails)
+        .sort((a,b)=>data.tails[b]-data.tails[a])
+        .slice(0,10)
+        .forEach(n=>{
+          html +=
+            "<span class='num'>"+
+            n+" ("+data.tails[n]+")</span>";
+        });
+
+      html += "</div>";
+    }
+
+    if(data.overlap && data.overlap.length){
+
+      html +=
+        "<p><b>🔗 Giao thoa liên đài:</b></p>";
+
+      html += "<div class='numbers'>";
+
+      data.overlap.forEach(n=>{
+
+        html +=
+          "<span class='num'>"+n+"</span>";
+      });
+
+      html += "</div>";
+    }
+
+    html += "</div>";
+
+    return html;
+
+  }catch(e){
+
+    return "";
+  }
+}
+
+async function updateData(){
+
+  const status =
+    document.getElementById("status");
+
+  status.innerText =
+    "⏳ Đang cập nhật dữ liệu...";
+
+  try{
+
+    const res =
+      await fetch("/api/update");
+
+    const data =
+      await res.json();
+
+    if(data.success){
+
+      status.innerText =
+        "✅ Đã cập nhật dữ liệu thành công.";
+
+      loadRegion(currentRegion);
+
+    }else{
+
+      status.innerText =
+        "⚠️ Chưa cập nhật được dữ liệu.";
+    }
+
+  }catch(error){
+
+    status.innerText =
+      "❌ Lỗi kết nối máy chủ.";
+  }
+}
+
+function escapeHtml(value){
+
+  return value
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
@@ -340,198 +463,29 @@ function escapeHTML(value){
     .replace(/'/g,"&#039;");
 }
 
-function formatNumbers(value){
-  return escapeHTML(String(value ?? "").trim())
-    .replace(/\s+/g," - ");
-}
-
-async function loadData(){
-
-  const status=document.getElementById("status");
-  status.textContent="Đang tải dữ liệu...";
+async function checkStatus(){
 
   try{
 
-    const response=await fetch("/api/results");
-    const data=await response.json();
+    const res =
+      await fetch("/api/status");
 
-    if(!Array.isArray(data) || !data.length){
-      document.getElementById("results").innerHTML=
-        '<div class="notice">Chưa có dữ liệu xổ số.</div>';
-      status.textContent="";
-      return;
-    }
+    const data =
+      await res.json();
 
-    currentData=data[0];
+    document.getElementById("status").innerText =
+      data.message ||
+      "✅ Máy chủ đang hoạt động.";
 
-    const date=currentData.updatedAt
-      ? new Date(currentData.updatedAt)
-          .toLocaleDateString("vi-VN")
-      : "Hôm nay";
+  }catch(e){
 
-    document.getElementById("date-display").textContent=
-      "KẾT QUẢ NGÀY "+date;
-
-    document.getElementById("totalDays").textContent=data.length;
-
-    document.getElementById("lastUpdate").textContent=
-      currentData.updatedAt
-      ? new Date(currentData.updatedAt)
-          .toLocaleTimeString("vi-VN")
-      : "--";
-
-    renderResults(currentData);
-
-    status.textContent="Đã tải dữ liệu thành công.";
-
-  }catch(error){
-
-    console.error(error);
-
-    status.textContent="Không kết nối được máy chủ.";
-    document.getElementById("serverStatus").textContent="LỖI";
+    document.getElementById("status").innerText =
+      "⚠️ Đang chờ máy chủ...";
   }
 }
 
-function renderResults(data){
-
-  if(!data.rows || !data.rows.length){
-    document.getElementById("results").innerHTML=
-      '<div class="notice">Không có bảng kết quả.</div>';
-    return;
-  }
-
-  const rows=data.rows;
-
-  const stations=[];
-
-  for(let i=1;i<rows[0].length;i++){
-    if(rows[0][i]){
-      stations.push(rows[0][i]);
-    }
-  }
-
-  let html=
-    '<div class="section-title">🎟️ KẾT QUẢ XỔ SỐ MIỀN NAM</div>'+
-    '<div class="stations">';
-
-  stations.forEach((station,index)=>{
-
-    html+='<div class="station">';
-
-    html+=
-      '<div class="station-title">'+
-      escapeHTML(station)+
-      '</div>';
-
-    for(let i=1;i<rows.length;i++){
-
-      const row=rows[i];
-
-      if(!row[0]) continue;
-
-      const prizeName=String(row[0]).trim();
-
-      if(
-        !prizeName.startsWith("G") &&
-        !prizeName.startsWith("Đ") &&
-        !prizeName.startsWith("M")
-      ) continue;
-
-      const number=row[index+1] || "";
-
-      let className="prize";
-
-      if(prizeName==="G8"){
-        className+=" g8";
-      }
-
-      if(
-        prizeName==="ĐB" ||
-        prizeName==="Đặc Biệt"
-      ){
-        className+=" db";
-      }
-
-      html+=
-        '<div class="'+className+'">'+
-          '<div class="label">'+
-            escapeHTML(prizeName)+
-          '</div>'+
-          '<div class="number">'+
-            formatNumbers(number)+
-          '</div>'+
-        '</div>';
-    }
-
-    html+="</div>";
-  });
-
-  html+="</div>";
-
-  document.getElementById("results").innerHTML=html;
-}
-
-function switchRegion(region,button){
-
-  document
-    .querySelectorAll(".menu button")
-    .forEach(btn=>btn.classList.remove("active"));
-
-  button.classList.add("active");
-
-  if(region==="XSMN"){
-
-    if(currentData){
-      renderResults(currentData);
-    }
-
-  }else{
-
-    document.getElementById("results").innerHTML=
-      '<div class="notice" style="text-align:center">'+
-      '🚧 Dữ liệu '+region+
-      ' đang được nâng cấp.<br><br>'+
-      'Hiện hệ thống đang hiển thị kết quả Miền Nam.'+
-      '</div>';
-  }
-}
-
-async function updateData(){
-
-  const status=document.getElementById("status");
-
-  status.textContent="Đang đồng bộ dữ liệu mới...";
-
-  try{
-
-    const response=await fetch(
-      "/api/update",
-      {method:"POST"}
-    );
-
-    const result=await response.json();
-
-    if(result.ok){
-
-      status.textContent=
-        "Cập nhật thành công. Đang tải lại...";
-
-      setTimeout(loadData,1000);
-
-    }else{
-
-      status.textContent="Cập nhật thất bại.";
-    }
-
-  }catch(error){
-
-    status.textContent=
-      "Không thể cập nhật dữ liệu.";
-  }
-}
-
-loadData();
+checkStatus();
+loadRegion("mn");
 </script>
 
 </body>
