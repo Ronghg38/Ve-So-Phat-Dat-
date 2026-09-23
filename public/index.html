@@ -1,680 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vé Số Phát Đạt - Soi Cầu XSMN</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      color: #222;
-    }
-
-    header {
-      background: linear-gradient(135deg, #b40000, #e00000);
-      color: #fff;
-      text-align: center;
-      padding: 14px 10px;
-      box-shadow: 0 2px 8px #999;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 800;
-    }
-
-    header p {
-      margin: 5px 0 0;
-      font-size: 13px;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 5px;
-      padding: 8px;
-      background: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 1px 5px #bbb;
-    }
-
-    .tabs button {
-      flex: 1;
-      border: 0;
-      border-radius: 6px;
-      padding: 10px 5px;
-      font-weight: bold;
-      background: #eee;
-      color: #555;
-      cursor: pointer;
-    }
-
-    .tabs button.active {
-      background: #c40000;
-      color: #fff;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 10px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .title {
-      font-weight: bold;
-      color: #a90000;
-      font-size: 18px;
-    }
-
-    .update {
-      border: 0;
-      background: #c40000;
-      color: white;
-      border-radius: 6px;
-      padding: 9px 12px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .status {
-      font-size: 12px;
-      color: #666;
-      margin-bottom: 10px;
-    }
-
-    .station {
-      background: white;
-      border-radius: 9px;
-      margin-bottom: 12px;
-      overflow: hidden;
-      box-shadow: 0 1px 5px #ccc;
-    }
-
-    .station-head {
-      background: #fff4d6;
-      border-bottom: 1px solid #e4c76a;
-      padding: 10px 12px;
-    }
-
-    .station-name {
-      color: #a50000;
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .station-date {
-      color: #666;
-      font-size: 13px;
-      margin-top: 3px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    td {
-      border-bottom: 1px solid #eee;
-      padding: 8px 7px;
-      vertical-align: top;
-    }
-
-    td:first-child {
-      width: 42px;
-      text-align: center;
-      font-weight: bold;
-      color: #a00000;
-      background: #fafafa;
-    }
-
-    td:last-child {
-      font-weight: 600;
-      word-break: break-word;
-      line-height: 1.5;
-    }
-
-    .special td {
-      background: #fff1b8;
-      color: #c00000;
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .view {
-      display: block;
-      width: calc(100% - 20px);
-      margin: 10px;
-      border: 0;
-      background: #b40000;
-      color: #fff;
-      border-radius: 6px;
-      padding: 10px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .detail {
-      display: none;
-    }
-
-    .back {
-      border: 0;
-      background: #555;
-      color: #fff;
-      padding: 9px 14px;
-      border-radius: 6px;
-      margin-bottom: 10px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .detail-title {
-      background: #fff4d6;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-      border: 1px solid #e4c76a;
-    }
-
-    .detail-title h2 {
-      margin: 0;
-      color: #a50000;
-      font-size: 20px;
-    }
-
-    .detail-title p {
-      margin: 5px 0 0;
-      color: #666;
-      font-size: 13px;
-    }
-
-    .stats {
-      background: white;
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 10px;
-      box-shadow: 0 1px 5px #ccc;
-    }
-
-    .stats h3 {
-      margin: 0 0 8px;
-      color: #a50000;
-    }
-
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid #eee;
-      padding: 7px 0;
-      font-size: 14px;
-    }
-
-    .empty {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      text-align: center;
-      color: #777;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 25px;
-      color: #777;
-    }
-
-    @media (min-width: 700px) {
-      .stations-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .station {
-        margin-bottom: 0;
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vé Số Phát Đạt - Soi Cầu XSMN</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f4f6;font-family:Arial,sans-serif;color:#222}
+header{background:linear-gradient(135deg,#b40000,#e21b23);color:#fff;padding:14px 12px;text-align:center;position:sticky;top:0;z-index:5}
+.logo{font-size:24px;font-weight:900;letter-spacing:.3px}.sub{font-size:12px;margin-top:3px}
+.wrap{max-width:760px;margin:auto;padding:10px}
+.tabs{display:flex;gap:6px;margin-bottom:10px}.tab{flex:1;border:0;padding:11px 5px;border-radius:8px;background:#ddd;font-weight:800}.tab.active{background:#b40000;color:#fff}
+.top{display:flex;gap:7px;margin-bottom:10px}.top button{flex:1;border:0;border-radius:8px;padding:11px;background:#fff;font-weight:800;box-shadow:0 1px 4px #ccc}
+.update{background:#ffd400!important}.date{background:#fff3cd;padding:8px;border-radius:8px;text-align:center;font-weight:700;margin-bottom:10px}
+.card{background:#fff;border-radius:10px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 5px #d5d5d5}
+.cardhead{padding:10px 12px;background:#fff7df;border-bottom:1px solid #eadcae;display:flex;justify-content:space-between;align-items:center}
+.station{font-size:18px;font-weight:900;color:#b40000}.small{font-size:12px;color:#666}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #eee;padding:6px 5px;vertical-align:top}th{width:42px;color:#b40000;background:#fafafa}td{word-break:break-word}.db td{font-weight:900;color:#b40000}
+.stats{padding:9px 10px}.stats-title{font-weight:900;color:#b40000;margin-bottom:6px}.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.box{background:#f7f7f7;border-radius:7px;padding:7px;font-size:12px}.nums{line-height:1.7}
+.detail{display:none}.back{border:0;background:#222;color:#fff;padding:9px 12px;border-radius:7px;margin-bottom:10px;font-weight:800}
+.source{text-align:center;color:#777;font-size:11px;padding:10px}.source a{color:#b40000}
+.empty{text-align:center;padding:25px;color:#777}
+</style>
 </head>
-
 <body>
-
-<header>
-  <h1>VÉ SỐ PHÁT ĐẠT</h1>
-  <p>SOI CẦU XSMN</p>
-</header>
-
-<div class="tabs">
-  <button class="active" onclick="changeRegion('mn', this)">
-    MIỀN NAM
-  </button>
-
-  <button onclick="changeRegion('mt', this)">
-    MIỀN TRUNG
-  </button>
-
-  <button onclick="changeRegion('mb', this)">
-    MIỀN BẮC
-  </button>
-</div>
-
-<div class="container">
-
-  <div id="listView">
-
-    <div class="topbar">
-      <div class="title" id="regionTitle">
-        XỔ SỐ MIỀN NAM
-      </div>
-
-      <button class="update" onclick="updateData()">
-        CẬP NHẬT
-      </button>
-    </div>
-
-    <div class="status" id="status">
-      Đang tải dữ liệu...
-    </div>
-
-    <div id="stations" class="stations-grid">
-      <div class="loading">
-        Đang tải kết quả...
-      </div>
-    </div>
-
+<header><div class="logo">VÉ SỐ PHÁT ĐẠT</div><div class="sub">SOI CẦU XỔ SỐ MIỀN NAM</div></header>
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab active" data-region="mn">MIỀN NAM</button>
+    <button class="tab" data-region="mt">MIỀN TRUNG</button>
+    <button class="tab" data-region="mb">MIỀN BẮC</button>
   </div>
-
-  <div id="detailView" class="detail">
-
-    <button class="back" onclick="showList()">
-      ← QUAY LẠI
-    </button>
-
-    <div id="detailContent"></div>
-
+  <div class="top">
+    <button class="update" id="update">CẬP NHẬT NGAY</button>
+    <button id="refresh">LÀM MỚI</button>
   </div>
-
+  <div id="status" class="date">Đang tải dữ liệu...</div>
+  <main id="list"></main>
+  <section id="detail" class="detail"></section>
+  <div class="source">Nguồn kết quả: <a href="https://sxmn.com.vn/" target="_blank" rel="noopener">SXMN</a></div>
 </div>
-
 <script>
-
-let currentRegion = "mn";
-
-const regionNames = {
-  mn: "XỔ SỐ MIỀN NAM",
-  mt: "XỔ SỐ MIỀN TRUNG",
-  mb: "XỔ SỐ MIỀN BẮC"
-};
-
-function escapeHtml(text) {
-  return String(text ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+let region="mn", data={mn:[],mt:[],mb:[]};
+const labels=["G8","G7","G6","G5","G4","G3","G2","G1","ĐB"];
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function prettyDate(d){return d||"Chưa có ngày";}
+function weekday(d){
+  if(!d)return "";
+  const [dd,mm,yy]=d.split("/").map(Number), w=new Date(yy,mm-1,dd).getDay();
+  return ["CN","Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6","Thứ 7"][w];
 }
-
-function formatValue(value) {
-  return escapeHtml(value || "");
+function stats(item){
+  const nums=[];
+  (item.rows||[]).forEach(r=>(r.values||[]).forEach(v=>/^\d+$/.test(v)&&v.length>=2&&nums.push(v.slice(-2))));
+  const h=Array(10).fill(0),t=Array(10).fill(0);
+  nums.forEach(n=>{h[+n[0]]++;t[+n[1]]++});
+  return {nums:nums.length,h,t};
 }
-
-function changeRegion(region, button) {
-
-  currentRegion = region;
-
-  document.querySelectorAll(".tabs button")
-    .forEach(btn => btn.classList.remove("active"));
-
-  button.classList.add("active");
-
-  document.getElementById("regionTitle").textContent =
-    regionNames[region];
-
-  showList();
-
-  loadResults();
+function statHTML(item){
+  const s=stats(item);
+  const heads=s.h.map((v,i)=>v?`${i} (${v})`:null).filter(Boolean).join(" · ")||"Không có";
+  const tails=s.t.map((v,i)=>v?`${i} (${v})`:null).filter(Boolean).join(" · ")||"Không có";
+  return `<div class="stats"><div class="stats-title">THỐNG KÊ ${esc(item.station)}</div>
+  <div class="statgrid"><div class="box"><b>Tổng số bộ số:</b> ${s.nums}<br><b>Đầu:</b><div class="nums">${esc(heads)}</div></div>
+  <div class="box"><b>Đuôi:</b><div class="nums">${esc(tails)}</div></div></div></div>`;
 }
-
-async function loadResults() {
-
-  const box = document.getElementById("stations");
-
-  box.innerHTML =
-    '<div class="loading">Đang tải kết quả...</div>';
-
-  try {
-
-    const response =
-      await fetch(`/api/results?region=${currentRegion}`);
-
-    const data = await response.json();
-
-    const results = data.results || [];
-
-    document.getElementById("status").textContent =
-      results.length
-        ? `Có ${results.length} đài • Cập nhật ${formatTime(data.updatedAt)}`
-        : "Chưa có dữ liệu.";
-
-    if (!results.length) {
-
-      box.innerHTML =
-        '<div class="empty">Chưa có dữ liệu kết quả.</div>';
-
-      return;
-    }
-
-    box.innerHTML =
-      results.map((item, index) =>
-        stationCard(item, index)
-      ).join("");
-
-  } catch (error) {
-
-    console.error(error);
-
-    box.innerHTML =
-      '<div class="empty">Không tải được dữ liệu.</div>';
-
-    document.getElementById("status").textContent =
-      "Lỗi kết nối dữ liệu.";
-  }
+function card(item){
+  const rows=labels.map(l=>{
+    const r=(item.rows||[]).find(x=>x.label===l);
+    return `<tr class="${l==="ĐB"?"db":""}"><th>${l}</th><td>${esc((r?.values||[]).join(" · "))}</td></tr>`;
+  }).join("");
+  return `<article class="card"><div class="cardhead"><div><div class="station">${esc(item.station)}</div><div class="small">${esc(weekday(item.date))} • ${esc(prettyDate(item.date))}</div></div><button onclick='showDetail(${JSON.stringify(item.station)})'>XEM TỪNG ĐÀI ›</button></div>
+  <table><tbody>${rows}</tbody></table>${statHTML(item)}</article>`;
 }
-
-function stationCard(item, index) {
-
-  const rows = item.rows || [];
-
-  return `
-    <div class="station">
-
-      <div class="station-head">
-
-        <div class="station-name">
-          ${escapeHtml(item.station)}
-        </div>
-
-        <div class="station-date">
-          ${escapeHtml(item.weekday || "")}
-          ${item.weekday && item.displayDate ? " • " : ""}
-          ${escapeHtml(item.displayDate || "")}
-        </div>
-
-      </div>
-
-      <table>
-
-        <tbody>
-
-          ${rows.map(row => {
-
-            const special =
-              row.label === "ĐB";
-
-            return `
-              <tr class="${special ? "special" : ""}">
-
-                <td>
-                  ${escapeHtml(row.label)}
-                </td>
-
-                <td>
-                  ${formatValue(row.value)}
-                </td>
-
-              </tr>
-            `;
-
-          }).join("")}
-
-        </tbody>
-
-      </table>
-
-      <button
-        class="view"
-        onclick="viewStation(${index})">
-
-        XEM TỪNG ĐÀI ›
-
-      </button>
-
-    </div>
-  `;
+function render(){
+  $("detail").style.display="none"; $("list").style.display="block";
+  const arr=data[region]||[];
+  $("status").textContent=arr.length?`Đã cập nhật • ${arr.length} đài`:"Chưa có dữ liệu";
+  $("list").innerHTML=arr.length?arr.map(card).join(""):`<div class="empty">Chưa có dữ liệu. Bấm CẬP NHẬT NGAY.</div>`;
 }
-
-let currentResults = [];
-
-async function viewStation(index) {
-
-  try {
-
-    const response =
-      await fetch(`/api/results?region=${currentRegion}`);
-
-    const data = await response.json();
-
-    currentResults = data.results || [];
-
-    const item = currentResults[index];
-
-    if (!item) return;
-
-    let analysis = null;
-
-    try {
-
-      const a =
-        await fetch(
-          `/api/station?region=${currentRegion}&station=${encodeURIComponent(item.station)}`
-        );
-
-      if (a.ok) {
-        analysis = await a.json();
-      }
-
-    } catch (e) {}
-
-    showDetail(item, analysis);
-
-  } catch (error) {
-
-    alert("Không tải được dữ liệu đài.");
-
-  }
+function showDetail(station){
+  const item=(data[region]||[]).find(x=>x.station===station);
+  if(!item)return;
+  $("list").style.display="none"; $("detail").style.display="block";
+  $("status").textContent="";
+  $("detail").innerHTML=`<button class="back" onclick="render()">← QUAY LẠI</button>${card(item)}`;
+  window.scrollTo({top:0,behavior:"smooth"});
 }
-
-function showDetail(item, data) {
-
-  document.getElementById("listView").style.display =
-    "none";
-
-  document.getElementById("detailView").style.display =
-    "block";
-
-  const analysis =
-    data && data.analysis
-      ? data.analysis
-      : null;
-
-  document.getElementById("detailContent").innerHTML = `
-
-    <div class="detail-title">
-
-      <h2>
-        ${escapeHtml(item.station)}
-      </h2>
-
-      <p>
-        ${escapeHtml(item.weekday || "")}
-        ${item.weekday && item.displayDate ? " • " : ""}
-        ${escapeHtml(item.displayDate || "")}
-      </p>
-
-    </div>
-
-    <div class="station">
-
-      <table>
-
-        <tbody>
-
-          ${(item.rows || []).map(row => {
-
-            const special =
-              row.label === "ĐB";
-
-            return `
-              <tr class="${special ? "special" : ""}">
-
-                <td>
-                  ${escapeHtml(row.label)}
-                </td>
-
-                <td>
-                  ${formatValue(row.value)}
-                </td>
-
-              </tr>
-            `;
-
-          }).join("")}
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-    ${
-      analysis
-        ? `
-          <div class="stats">
-
-            <h3>
-              THỐNG KÊ ${escapeHtml(item.station)}
-            </h3>
-
-            <div class="stat-row">
-              <span>Ngày thống kê</span>
-              <b>${escapeHtml(analysis.date || "")}</b>
-            </div>
-
-            <div class="stat-row">
-              <span>Tổng số điểm</span>
-              <b>${analysis.totalPoint || 0}</b>
-            </div>
-
-            <div class="stat-row">
-              <span>Đầu xuất hiện</span>
-              <b>${formatCounts(analysis.head)}</b>
-            </div>
-
-            <div class="stat-row">
-              <span>Đuôi xuất hiện</span>
-              <b>${formatCounts(analysis.tail)}</b>
-            </div>
-
-          </div>
-        `
-        : ""
-    }
-
-  `;
+async function load(){
+  const r=await fetch("/api/results"); data=await r.json(); render();
 }
-
-function formatCounts(obj) {
-
-  if (!obj) return "";
-
-  return Object.entries(obj)
-    .sort((a, b) => b[1] - a[1])
-    .map(([key, value]) => `${key}: ${value}`)
-    .join(" • ");
+async function update(){
+  $("status").textContent="Đang cập nhật...";
+  const r=await fetch("/api/update",{method:"POST"}); const j=await r.json();
+  if(j.ok){data=j.data;render()}else $("status").textContent="Cập nhật lỗi";
 }
-
-function showList() {
-
-  document.getElementById("detailView").style.display =
-    "none";
-
-  document.getElementById("listView").style.display =
-    "block";
-}
-
-async function updateData() {
-
-  const status =
-    document.getElementById("status");
-
-  status.textContent =
-    "Đang cập nhật dữ liệu...";
-
-  try {
-
-    const response =
-      await fetch("/api/update", {
-        method: "POST"
-      });
-
-    const data =
-      await response.json();
-
-    if (data.ok) {
-
-      status.textContent =
-        "Đã cập nhật dữ liệu thành công.";
-
-      await loadResults();
-
-    } else {
-
-      status.textContent =
-        "Cập nhật không thành công.";
-    }
-
-  } catch (error) {
-
-    status.textContent =
-      "Lỗi khi cập nhật dữ liệu.";
-  }
-}
-
-function formatTime(value) {
-
-  if (!value) return "";
-
-  const date = new Date(value);
-
-  if (isNaN(date.getTime())) return "";
-
-  return date.toLocaleTimeString("vi-VN", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-}
-
-loadResults();
-
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");region=b.dataset.region;render()});
+$("update").onclick=update;$("refresh").onclick=load;load();
 </script>
-
 </body>
 </html>
