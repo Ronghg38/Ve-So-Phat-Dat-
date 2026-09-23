@@ -1,13 +1,16 @@
 {
-  "name": "ve-so-phat-dat-soi-cau-xsmn",
-  "version": "1.0.0",
-  "description": "Vé Số Phát Đạt - Soi Cầu XSMN",
+  "name": "ve-so-phat-dat",
+  "version": "4.1.0",
+  "description": "Vé Số Phát Đạt - kết quả và thống kê XSMN theo từng đài",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "cheerio": "^1.0.0",
+    "cheerio": "^1.1.2",
     "express": "^4.21.2",
     "node-cron": "^3.0.3"
   }
