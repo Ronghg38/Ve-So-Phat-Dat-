@@ -1,12 +1,12 @@
 const express = require("express");
-const cheerio = require("cheerio");
 const cron = require("node-cron");
+const cheerio = require("cheerio");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 10000;
-
-app.use(express.json());
-app.use(express.static("public"));
+const DATA_FILE = path.join(__dirname, "data.json");
 
 const SOURCES = {
   mn: "https://sxmn.com.vn/",
@@ -15,478 +15,175 @@ const SOURCES = {
 };
 
 const STATIONS = {
-  mn: [
-    "TP Hồ Chí Minh",
-    "Đồng Nai",
-    "Cần Thơ",
-    "Sóc Trăng",
-    "Bạc Liêu",
-    "Vũng Tàu",
-    "Đồng Tháp",
-    "Cà Mau",
-    "Bến Tre",
-    "Tây Ninh",
-    "An Giang",
-    "Bình Thuận",
-    "Long An",
-    "Tiền Giang",
-    "Kiên Giang",
-    "Trà Vinh",
-    "Vĩnh Long"
-  ],
-  mt: [
-    "Đà Nẵng",
-    "Quảng Nam",
-    "Quảng Ngãi",
-    "Bình Định",
-    "Phú Yên",
-    "Khánh Hòa",
-    "Ninh Thuận",
-    "Bình Thuận",
-    "Kon Tum",
-    "Gia Lai",
-    "Đắk Lắk",
-    "Đắk Nông",
-    "Quảng Bình",
-    "Quảng Trị",
-    "Thừa Thiên Huế"
-  ],
-  mb: [
-    "Hà Nội",
-    "Quảng Ninh",
-    "Bắc Ninh",
-    "Hải Phòng",
-    "Nam Định",
-    "Thái Bình"
-  ]
+  mn: ["An Giang","Bạc Liêu","Bến Tre","Bình Dương","Bình Phước","Bình Thuận","Cà Mau","Cần Thơ","Đồng Nai","Đồng Tháp","Hậu Giang","Kiên Giang","Long An","Sóc Trăng","Tây Ninh","Tiền Giang","TP.HCM","Trà Vinh","Vĩnh Long","Vũng Tàu","Đà Lạt"],
+  mt: ["Bình Định","Đà Nẵng","Đắk Lắk","Đắk Nông","Gia Lai","Khánh Hòa","Kon Tum","Ninh Thuận","Phú Yên","Quảng Bình","Quảng Nam","Quảng Ngãi","Quảng Trị","Thừa Thiên Huế","Huế"],
+  mb: ["Hà Nội","Quảng Ninh","Bắc Ninh","Hải Phòng","Nam Định","Thái Bình","Hải Dương"]
 };
 
-const PRIZES = [
-  "G8",
-  "G7",
-  "G6",
-  "G5",
-  "G4",
-  "G3",
-  "G2",
-  "G1",
-  "ĐB"
-];
+const LABELS = ["G8","G7","G6","G5","G4","G3","G2","G1","ĐB"];
 
-let database = {
-  mn: [],
-  mt: [],
-  mb: [],
-  updatedAt: null
-};
-
-function cleanText(text) {
-  return String(text || "")
-    .replace(/\s+/g, " ")
-    .trim();
+function loadData(){
+  try { return JSON.parse(fs.readFileSync(DATA_FILE, "utf8")); }
+  catch { return {mn:[],mt:[],mb:[],updatedAt:null}; }
 }
+function saveData(data){ fs.writeFileSync(DATA_FILE, JSON.stringify(data,null,2), "utf8"); }
 
-function normalizeStation(name) {
-  const n = cleanText(name).toLowerCase();
+function cleanText(s){ return String(s||"").replace(/\s+/g," ").trim(); }
 
-  const map = {
-    "tp.hcm": "TP Hồ Chí Minh",
-    "tp hcm": "TP Hồ Chí Minh",
-    "tphcm": "TP Hồ Chí Minh",
-    "hồ chí minh": "TP Hồ Chí Minh",
-    "thừa thiên huế": "Thừa Thiên Huế"
-  };
-
-  return map[n] || cleanText(name);
-}
-
-function isPrize(text) {
-  const t = cleanText(text).toUpperCase();
-
-  return PRIZES.includes(t) ||
-    t === "GĐB" ||
-    t === "ĐẶC BIỆT";
-}
-
-function prizeName(text) {
-  const t = cleanText(text).toUpperCase();
-
-  if (t === "GĐB" || t === "ĐẶC BIỆT") {
-    return "ĐB";
+function parseDateNear($, el){
+  let node = el;
+  for(let i=0;i<8 && node;i++,node=node.parent){
+    const t = cleanText($(node).text());
+    const m = t.match(/\b(\d{1,2})[\/-](\d{1,2})[\/-](20\d{2})\b/);
+    if(m) return `${m[1].padStart(2,"0")}/${m[2].padStart(2,"0")}/${m[3]}`;
   }
-
-  return t;
+  return "";
 }
 
-function findDate(text) {
-  const m = String(text || "").match(
-    /\b(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})\b/
-  );
-
-  if (!m) return null;
-
-  const d = String(m[1]).padStart(2, "0");
-  const mo = String(m[2]).padStart(2, "0");
-  const y = m[3];
-
-  return `${d}/${mo}/${y}`;
+function splitValues(text){
+  return cleanText(text).split(/\s+/).filter(Boolean);
 }
 
-function weekday(dateString) {
-  if (!dateString) return "";
-
-  const [d, m, y] = dateString.split("/").map(Number);
-  const date = new Date(y, m - 1, d);
-
-  const names = [
-    "Chủ nhật",
-    "Thứ 2",
-    "Thứ 3",
-    "Thứ 4",
-    "Thứ 5",
-    "Thứ 6",
-    "Thứ 7"
-  ];
-
-  return names[date.getDay()];
-}
-
-function dateToNumber(dateString) {
-  if (!dateString) return 0;
-
-  const [d, m, y] = dateString.split("/").map(Number);
-
-  return y * 10000 + m * 100 + d;
-}
-
-function detectStations($, table) {
-  const found = [];
-
-  $(table)
-    .find("th, td")
-    .each((_, el) => {
-      const text = cleanText($(el).text());
-
-      for (const station of [
-        ...STATIONS.mn,
-        ...STATIONS.mt,
-        ...STATIONS.mb
-      ]) {
-        if (
-          text === station ||
-          text.toLowerCase().includes(station.toLowerCase())
-        ) {
-          if (!found.includes(station)) {
-            found.push(station);
-          }
-        }
-      }
-    });
-
-  return found;
-}
-
-function parseTable($, table, region) {
-  const stations = detectStations($, table);
-
-  if (!stations.length) return [];
-
+function tableToStationRows($, table, region){
+  const $table = $(table);
   const rows = [];
+  $table.find("tr").each((_, tr)=>{
+    const cells = $(tr).find("th,td").map((__,c)=>cleanText($(c).text())).get();
+    if(cells.length) rows.push(cells);
+  });
+  if(rows.length < 2) return [];
+  const header = rows.find(r => r.some(x => STATIONS[region].includes(x)));
+  if(!header) return [];
+  const stationNames = header.filter(x => STATIONS[region].includes(x));
+  if(!stationNames.length) return [];
 
-  $(table)
-    .find("tr")
-    .each((_, tr) => {
-      const cells = $(tr)
-        .find("th,td")
-        .map((_, cell) => cleanText($(cell).text()))
-        .get();
-
-      if (!cells.length) return;
-
-      const prizeIndex = cells.findIndex((x) => isPrize(x));
-
-      if (prizeIndex === -1) return;
-
-      const label = prizeName(cells[prizeIndex]);
-
-      const values = cells
-        .slice(prizeIndex + 1)
-        .filter((x) => x && !isPrize(x));
-
-      if (!values.length) return;
-
-      rows.push({
-        label,
-        values
-      });
-    });
-
-  if (!rows.length) return [];
-
-  let date = null;
-
-  const tableHtml = $.html(table);
-
-  date = findDate(tableHtml);
-
-  if (!date) {
-    const parentHtml = $.html($(table).parent());
-    date = findDate(parentHtml);
+  const map = {};
+  stationNames.forEach(name => map[name] = {});
+  for(const r of rows){
+    const labelIndex = r.findIndex(x => LABELS.includes(x));
+    if(labelIndex < 0) continue;
+    const label = r[labelIndex];
+    let col = 0;
+    for(let i=labelIndex+1;i<r.length && col<stationNames.length;i++,col++){
+      map[stationNames[col]][label] = splitValues(r[i]);
+    }
   }
 
-  if (!date) {
-    const pageText = $("body").text();
-    date = findDate(pageText);
-  }
-
-  return stations.map((station) => ({
-    station: normalizeStation(station),
+  const date = parseDateNear($, table);
+  return stationNames.map(station => ({
+    station,
     date,
-    weekday: weekday(date),
-    displayDate: date ? `Ngày ${date}` : "",
-    rows: rows.map((r) => ({
-      label: r.label,
-      value: r.values.join(" ")
-    }))
+    rows: LABELS.map(label => ({label, values: map[station][label] || []}))
   }));
 }
 
-async function fetchRegion(region) {
-  const response = await fetch(SOURCES[region], {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
-    }
+async function fetchHTML(url){
+  const res = await fetch(url, {
+    headers: {"User-Agent":"Mozilla/5.0 (compatible; VeSoPhatDat/4.1)"}
   });
-
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-
-  const html = await response.text();
-  const $ = cheerio.load(html);
-
-  const results = [];
-
-  $("table").each((_, table) => {
-    const parsed = parseTable($, table, region);
-
-    if (parsed.length) {
-      results.push(...parsed);
-    }
-  });
-
-  const dates = results
-    .map((x) => x.date)
-    .filter(Boolean)
-    .sort((a, b) => dateToNumber(b) - dateToNumber(a));
-
-  const latestDate = dates[0];
-
-  const filtered = latestDate
-    ? results.filter((x) => x.date === latestDate)
-    : results;
-
-  const unique = [];
-
-  for (const item of filtered) {
-    const exists = unique.some(
-      (x) =>
-        x.station === item.station &&
-        x.date === item.date
-    );
-
-    if (!exists) {
-      unique.push(item);
-    }
-  }
-
-  return unique;
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  return await res.text();
 }
 
-function analyzeStation(item) {
-  const head = {};
-  const tail = {};
+async function updateRegion(region){
+  const html = await fetchHTML(SOURCES[region]);
+  const $ = cheerio.load(html);
+  const found = [];
+  $("table").each((_, table)=>{
+    const items = tableToStationRows($, table, region);
+    for(const item of items){
+      if(item.rows.some(r=>r.values.length)) found.push(item);
+    }
+  });
 
-  for (const row of item.rows || []) {
-    const numbers = String(row.value || "")
-      .split(/\s+/)
-      .filter((x) => /^\d+$/.test(x));
+  // Giữ mỗi đài ở ngày mới nhất mà nguồn trả về.
+  const byStation = new Map();
+  for(const item of found){
+    if(!byStation.has(item.station)) byStation.set(item.station,item);
+  }
+  return Array.from(byStation.values());
+}
 
-    for (const number of numbers) {
-      if (!number) continue;
+async function updateAll(){
+  const data = loadData();
+  for(const region of ["mn","mt","mb"]){
+    try { data[region] = await updateRegion(region); }
+    catch(err){ console.error(`Update ${region}:`, err.message); }
+  }
+  data.updatedAt = new Date().toISOString();
+  saveData(data);
+  return data;
+}
 
-      const n = number.padStart(2, "0");
-      const first = n.slice(0, 1);
-      const last = n.slice(-1);
-
-      head[first] = (head[first] || 0) + 1;
-      tail[last] = (tail[last] || 0) + 1;
+function numbersForStation(station){
+  const nums = [];
+  for(const row of station.rows || []){
+    for(const v of row.values || []){
+      if(/^\d+$/.test(v) && v.length>=2) nums.push(v);
     }
   }
+  return nums;
+}
 
+function stats(station){
+  const nums = numbersForStation(station);
+  const two = nums.map(n=>n.slice(-2));
+  const heads = Array(10).fill(0), tails = Array(10).fill(0);
+  for(const n of two){
+    heads[Number(n[0])]++; tails[Number(n[1])]++;
+  }
   return {
-    station: item.station,
-    date: item.date,
-    weekday: item.weekday,
-    head,
-    tail,
-    totalPoint: Object.values(head).reduce(
-      (sum, value) => sum + value,
-      0
-    )
+    totalNumbers: nums.length,
+    head: heads,
+    tail: tails,
+    headMax: Math.max(...heads),
+    tailMax: Math.max(...tails)
   };
 }
 
-async function updateAll() {
-  for (const region of ["mn", "mt", "mb"]) {
-    try {
-      database[region] = await fetchRegion(region);
-    } catch (error) {
-      console.error(
-        `Lỗi cập nhật ${region}:`,
-        error.message
-      );
-    }
-  }
+app.use(express.static(path.join(__dirname,"public")));
 
-  database.updatedAt = new Date().toISOString();
-
-  return database;
-}
-
-app.get("/api/status", (req, res) => {
-  res.json({
-    ok: true,
-    updatedAt: database.updatedAt,
-    counts: {
-      mn: database.mn.length,
-      mt: database.mt.length,
-      mb: database.mb.length
-    }
-  });
+app.get("/api/status",(req,res)=>{
+  const d=loadData();
+  res.json({ok:true,updatedAt:d.updatedAt,regions:{
+    mn:d.mn?.length||0, mt:d.mt?.length||0, mb:d.mb?.length||0
+  }});
 });
 
-app.get("/api/results", (req, res) => {
-  const region = String(req.query.region || "mn").toLowerCase();
+app.get("/api/results",(req,res)=>res.json(loadData()));
 
-  if (!database[region]) {
-    return res.status(400).json({
-      error: "Khu vực không hợp lệ"
-    });
-  }
-
-  res.json({
-    region,
-    updatedAt: database.updatedAt,
-    results: database[region]
-  });
+app.get("/api/station",(req,res)=>{
+  const region = String(req.query.region||"mn").toLowerCase();
+  const station = String(req.query.station||"");
+  const d=loadData();
+  const item=(d[region]||[]).find(x=>x.station===station);
+  if(!item) return res.status(404).json({ok:false,message:"Không tìm thấy đài"});
+  res.json({...item, stats:stats(item)});
 });
 
-app.get("/api/station", (req, res) => {
-  const region = String(req.query.region || "mn").toLowerCase();
-  const station = cleanText(req.query.station || "");
-
-  if (!database[region]) {
-    return res.status(400).json({
-      error: "Khu vực không hợp lệ"
-    });
-  }
-
-  const result = database[region].find(
-    (x) =>
-      x.station.toLowerCase() ===
-      station.toLowerCase()
-  );
-
-  if (!result) {
-    return res.status(404).json({
-      error: "Không tìm thấy đài"
-    });
-  }
-
-  res.json({
-    ...result,
-    analysis: analyzeStation(result)
-  });
+app.get("/api/analyze",(req,res)=>{
+  const region=String(req.query.region||"mn").toLowerCase();
+  const d=loadData();
+  res.json((d[region]||[]).map(x=>({...x,stats:stats(x)})));
 });
 
-app.get("/api/analyze", (req, res) => {
-  const region = String(req.query.region || "mn").toLowerCase();
-
-  if (!database[region]) {
-    return res.status(400).json({
-      error: "Khu vực không hợp lệ"
-    });
-  }
-
-  res.json({
-    region,
-    updatedAt: database.updatedAt,
-    results: database[region].map(analyzeStation)
-  });
+app.post("/api/update",async(req,res)=>{
+  try{
+    const d=await updateAll();
+    res.json({ok:true,updatedAt:d.updatedAt,data:d});
+  }catch(err){ res.status(500).json({ok:false,message:err.message}); }
 });
 
-app.get("/api/schedule", (req, res) => {
-  res.json({
-    mn: "11h30 - 17h30",
-    mt: "17h15",
-    mb: "18h15",
-    update: "Mỗi 30 phút"
-  });
-});
+app.get("/api/source",(req,res)=>res.json({
+  name:"SXMN",
+  url:"https://sxmn.com.vn/",
+  note:"Nguồn kết quả xổ số được hiển thị rõ trên website Vé Số Phát Đạt."
+}));
 
-app.post("/api/update", async (req, res) => {
-  try {
-    await updateAll();
+cron.schedule("*/30 * * * *",()=>updateAll().catch(e=>console.error(e.message)));
 
-    res.json({
-      ok: true,
-      message: "Đã cập nhật dữ liệu thành công.",
-      updatedAt: database.updatedAt
-    });
-  } catch (error) {
-    res.status(500).json({
-      ok: false,
-      error: error.message
-    });
-  }
-});
-
-app.get("*", (req, res) => {
-  res.sendFile(
-    require("path").join(
-      __dirname,
-      "public",
-      "index.html"
-    )
-  );
-});
-
-app.listen(PORT, "0.0.0.0", async () => {
-  console.log(`Vé Số Phát Đạt đang chạy tại port ${PORT}`);
-
-  try {
-    await updateAll();
-    console.log("Đã cập nhật dữ liệu ban đầu.");
-  } catch (error) {
-    console.error(
-      "Không thể cập nhật dữ liệu ban đầu:",
-      error.message
-    );
-  }
-});
-
-cron.schedule("*/30 * * * *", async () => {
-  console.log("Tự động cập nhật dữ liệu...");
-
-  try {
-    await updateAll();
-    console.log("Cập nhật xong.");
-  } catch (error) {
-    console.error(
-      "Lỗi cập nhật tự động:",
-      error.message
-    );
-  }
+app.listen(PORT,"0.0.0.0",async()=>{
+  console.log(`Vé Số Phát Đạt chạy tại cổng ${PORT}`);
+  const d=loadData();
+  if(!d.updatedAt) updateAll().catch(e=>console.error("Initial update:",e.message));
 });
