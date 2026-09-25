@@ -1,102 +1,56 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vé Số Phát Đạt - Soi Cầu XSMN</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#f3f4f6;font-family:Arial,sans-serif;color:#222}
-header{background:linear-gradient(135deg,#b40000,#e21b23);color:#fff;padding:14px 12px;text-align:center;position:sticky;top:0;z-index:5}
-.logo{font-size:24px;font-weight:900;letter-spacing:.3px}.sub{font-size:12px;margin-top:3px}
-.wrap{max-width:760px;margin:auto;padding:10px}
-.tabs{display:flex;gap:6px;margin-bottom:10px}.tab{flex:1;border:0;padding:11px 5px;border-radius:8px;background:#ddd;font-weight:800}.tab.active{background:#b40000;color:#fff}
-.top{display:flex;gap:7px;margin-bottom:10px}.top button{flex:1;border:0;border-radius:8px;padding:11px;background:#fff;font-weight:800;box-shadow:0 1px 4px #ccc}
-.update{background:#ffd400!important}.date{background:#fff3cd;padding:8px;border-radius:8px;text-align:center;font-weight:700;margin-bottom:10px}
-.card{background:#fff;border-radius:10px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 5px #d5d5d5}
-.cardhead{padding:10px 12px;background:#fff7df;border-bottom:1px solid #eadcae;display:flex;justify-content:space-between;align-items:center}
-.station{font-size:18px;font-weight:900;color:#b40000}.small{font-size:12px;color:#666}
-table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #eee;padding:6px 5px;vertical-align:top}th{width:42px;color:#b40000;background:#fafafa}td{word-break:break-word}.db td{font-weight:900;color:#b40000}
-.stats{padding:9px 10px}.stats-title{font-weight:900;color:#b40000;margin-bottom:6px}.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.box{background:#f7f7f7;border-radius:7px;padding:7px;font-size:12px}.nums{line-height:1.7}
-.detail{display:none}.back{border:0;background:#222;color:#fff;padding:9px 12px;border-radius:7px;margin-bottom:10px;font-weight:800}
-.source{text-align:center;color:#777;font-size:11px;padding:10px}.source a{color:#b40000}
-.empty{text-align:center;padding:25px;color:#777}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vé Số Phát Đạt - Soi Cầu XSMN | CẬU TƯ RONG</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header><div class="logo">VÉ SỐ PHÁT ĐẠT</div><div class="sub">SOI CẦU XỔ SỐ MIỀN NAM</div></header>
-<div class="wrap">
-  <div class="tabs">
-    <button class="tab active" data-region="mn">MIỀN NAM</button>
-    <button class="tab" data-region="mt">MIỀN TRUNG</button>
-    <button class="tab" data-region="mb">MIỀN BẮC</button>
-  </div>
-  <div class="top">
-    <button class="update" id="update">CẬP NHẬT NGAY</button>
-    <button id="refresh">LÀM MỚI</button>
-  </div>
-  <div id="status" class="date">Đang tải dữ liệu...</div>
-  <main id="list"></main>
-  <section id="detail" class="detail"></section>
-  <div class="source">Nguồn kết quả: <a href="https://sxmn.com.vn/" target="_blank" rel="noopener">SXMN</a></div>
-</div>
-<script>
-let region="mn", data={mn:[],mt:[],mb:[]};
-const labels=["G8","G7","G6","G5","G4","G3","G2","G1","ĐB"];
-const $=id=>document.getElementById(id);
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
-function prettyDate(d){return d||"Chưa có ngày";}
-function weekday(d){
-  if(!d)return "";
-  const [dd,mm,yy]=d.split("/").map(Number), w=new Date(yy,mm-1,dd).getDay();
-  return ["CN","Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6","Thứ 7"][w];
-}
-function stats(item){
-  const nums=[];
-  (item.rows||[]).forEach(r=>(r.values||[]).forEach(v=>/^\d+$/.test(v)&&v.length>=2&&nums.push(v.slice(-2))));
-  const h=Array(10).fill(0),t=Array(10).fill(0);
-  nums.forEach(n=>{h[+n[0]]++;t[+n[1]]++});
-  return {nums:nums.length,h,t};
-}
-function statHTML(item){
-  const s=stats(item);
-  const heads=s.h.map((v,i)=>v?`${i} (${v})`:null).filter(Boolean).join(" · ")||"Không có";
-  const tails=s.t.map((v,i)=>v?`${i} (${v})`:null).filter(Boolean).join(" · ")||"Không có";
-  return `<div class="stats"><div class="stats-title">THỐNG KÊ ${esc(item.station)}</div>
-  <div class="statgrid"><div class="box"><b>Tổng số bộ số:</b> ${s.nums}<br><b>Đầu:</b><div class="nums">${esc(heads)}</div></div>
-  <div class="box"><b>Đuôi:</b><div class="nums">${esc(tails)}</div></div></div></div>`;
-}
-function card(item){
-  const rows=labels.map(l=>{
-    const r=(item.rows||[]).find(x=>x.label===l);
-    return `<tr class="${l==="ĐB"?"db":""}"><th>${l}</th><td>${esc((r?.values||[]).join(" · "))}</td></tr>`;
-  }).join("");
-  return `<article class="card"><div class="cardhead"><div><div class="station">${esc(item.station)}</div><div class="small">${esc(weekday(item.date))} • ${esc(prettyDate(item.date))}</div></div><button onclick='showDetail(${JSON.stringify(item.station)})'>XEM TỪNG ĐÀI ›</button></div>
-  <table><tbody>${rows}</tbody></table>${statHTML(item)}</article>`;
-}
-function render(){
-  $("detail").style.display="none"; $("list").style.display="block";
-  const arr=data[region]||[];
-  $("status").textContent=arr.length?`Đã cập nhật • ${arr.length} đài`:"Chưa có dữ liệu";
-  $("list").innerHTML=arr.length?arr.map(card).join(""):`<div class="empty">Chưa có dữ liệu. Bấm CẬP NHẬT NGAY.</div>`;
-}
-function showDetail(station){
-  const item=(data[region]||[]).find(x=>x.station===station);
-  if(!item)return;
-  $("list").style.display="none"; $("detail").style.display="block";
-  $("status").textContent="";
-  $("detail").innerHTML=`<button class="back" onclick="render()">← QUAY LẠI</button>${card(item)}`;
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-async function load(){
-  const r=await fetch("/api/results"); data=await r.json(); render();
-}
-async function update(){
-  $("status").textContent="Đang cập nhật...";
-  const r=await fetch("/api/update",{method:"POST"}); const j=await r.json();
-  if(j.ok){data=j.data;render()}else $("status").textContent="Cập nhật lỗi";
-}
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");region=b.dataset.region;render()});
-$("update").onclick=update;$("refresh").onclick=load;load();
-</script>
+    <div class="app-container">
+        <header>
+            <h2 class="brand-name">CẬU TƯ RONG</h2>
+            <h1 class="app-title">VÉ SỐ PHÁT ĐẠT</h1>
+            <p class="subtitle">Hệ Thống Phân Tích & Soi Cầu XSMN</p>
+        </header>
+
+        <div class="control-panel">
+            <div class="input-group">
+                <label>Giải Đặc Biệt (GĐB):</label>
+                <input type="text" id="gdb" placeholder="VD: 248195" maxlength="6">
+            </div>
+            <div class="input-group">
+                <label>Giải Nhất (G1):</label>
+                <input type="text" id="g1" placeholder="VD: 71345" maxlength="5">
+            </div>
+            <div class="input-group">
+                <label>Dãy số bất kỳ (Tìm Cầu Kẹp):</label>
+                <input type="text" id="giaiKhac" placeholder="VD: 83482" maxlength="5">
+            </div>
+            
+            <button class="btn-calc" onclick="xuLySoiCau()">PHÂN TÍCH NHỊP LÔ</button>
+        </div>
+
+        <div class="result-board">
+            <h3>KẾT QUẢ DỰ ĐOÁN</h3>
+            <div class="result-item">
+                <span>Cầu Pascal:</span>
+                <span class="highlight neon-text" id="kqPascal">00</span>
+            </div>
+            <div class="result-item">
+                <span>Bóng Dương (2 số cuối GĐB):</span>
+                <span class="highlight neon-text" id="kqBongDuong">00</span>
+            </div>
+            <div class="result-item">
+                <span>Bóng Âm (2 số cuối GĐB):</span>
+                <span class="highlight neon-text" id="kqBongAm">00</span>
+            </div>
+            <div class="result-item">
+                <span>Cầu Kẹp:</span>
+                <span class="highlight neon-text" id="kqKep">Không có</span>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
