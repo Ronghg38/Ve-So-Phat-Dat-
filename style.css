@@ -1,1 +1,106 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+body {
+    background-color: #0d0d14; /* Nền tối cyberpunk */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.app-container {
+    background: linear-gradient(145deg, #161623, #1a1a2e);
+    border: 1px solid #32e0c4;
+    border-radius: 15px;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 0 20px rgba(50, 224, 196, 0.2);
+}
+
+header { text-align: center; margin-bottom: 30px; }
+
+.brand-name {
+    color: #ff2a6d; /* Màu hồng neon */
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #ff2a6d;
+}
+
+.app-title {
+    color: #05d9e8; /* Màu xanh cyan */
+    font-size: 2rem;
+    margin: 10px 0;
+    text-shadow: 0 0 15px #05d9e8;
+}
+
+.subtitle { color: #8f95c0; font-size: 0.9rem; }
+
+.input-group { margin-bottom: 15px; }
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #d1d5eb;
+    font-size: 0.9rem;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    background-color: #0a0a10;
+    border: 1px solid #2d2d44;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus { border-color: #05d9e8; box-shadow: 0 0 10px rgba(5, 217, 232, 0.3); }
+
+.btn-calc {
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    background: linear-gradient(90deg, #ff2a6d, #d9058b);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 42, 109, 0.4);
+    transition: 0.3s;
+}
+
+.btn-calc:hover { box-shadow: 0 0 25px rgba(255, 42, 109, 0.7); transform: translateY(-2px); }
+
+.result-board {
+    margin-top: 30px;
+    background-color: #0a0a10;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #05d9e8;
+}
+
+.result-board h3 { color: #8f95c0; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid #2d2d44; padding-bottom: 10px;}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.neon-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #e5e5e5;
+    text-shadow: 0 0 8px #fff;
+}
 
