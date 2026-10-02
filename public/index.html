@@ -3,54 +3,553 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vé Số Phát Đạt - Soi Cầu XSMN | CẬU TƯ RONG</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Tham Khảo & Quay Thử Xổ Số Miền Nam Hiện Đại</title>
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #151c2c;
+            --card-border: #26334d;
+            --gold: #fbbf24;
+            --gold-light: #fde68a;
+            --red-vip: #e11d48;
+            --red-dark: #9f1239;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 0%, #2a1225 0%, #0b0f19 60%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        /* HEADER HIỆN ĐẠI */
+        .hero-header {
+            text-align: center;
+            padding: 28px 15px 22px;
+            border-bottom: 1px solid rgba(251, 191, 36, 0.25);
+            background: linear-gradient(180deg, rgba(225, 29, 72, 0.18) 0%, rgba(11, 15, 25, 0) 100%);
+        }
+        .badge-top {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--red-vip), #be123c);
+            color: #fff;
+            padding: 4px 14px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 15px rgba(225, 29, 72, 0.6);
+        }
+        .hero-header h1 {
+            font-size: clamp(22px, 4vw, 32px);
+            font-weight: 900;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #fff, var(--gold), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+        .hero-header p { color: var(--text-sub); font-size: 14px; margin-top: 6px; }
+
+        .main-wrap { max-width: 1140px; margin: 20px auto; padding: 0 15px; }
+
+        /* THANH CHỌN THỨ TRONG TUẦN (LỊCH XSMN) */
+        .day-nav {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 768px) {
+            .day-nav { grid-template-columns: repeat(4, 1fr); }
+        }
+        .day-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-sub);
+            padding: 10px 6px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            text-align: center;
+            transition: 0.25s;
+        }
+        .day-btn span { display: block; font-size: 11px; font-weight: normal; margin-top: 3px; opacity: 0.75; }
+        .day-btn:hover { border-color: var(--gold); color: #fff; }
+        .day-btn.active {
+            background: linear-gradient(135deg, var(--red-vip), var(--red-dark));
+            border-color: var(--gold);
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(225, 29, 72, 0.4);
+        }
+        .day-btn.active span { color: var(--gold-light); opacity: 1; }
+
+        /* SECTION TIÊU ĐỀ */
+        .sec-head {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .sec-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* KHU VỰC 1: THẺ THAM KHẢO SỐ ĐẸP XSMN */
+        .ref-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .vip-card {
+            background: linear-gradient(155deg, #1b2438 0%, #111726 100%);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            border-radius: 16px;
+            padding: 18px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+        }
+        .vip-card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(255,255,255,0.12);
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+        .station-name { font-size: 18px; font-weight: 900; color: #fff; }
+        .tag-vip {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        /* Quả cầu số đẹp */
+        .balls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--text-sub);
+        }
+        .ball-vip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ff4d6d, #be123c);
+            color: #fff;
+            font-size: 19px;
+            font-weight: 900;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.6), inset 0 2px 4px rgba(255,255,255,0.4);
+            border: 2px solid var(--gold);
+        }
+        .pill-gold {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #000;
+            font-weight: 900;
+            font-size: 15px;
+            padding: 5px 12px;
+            border-radius: 8px;
+            letter-spacing: 1px;
+        }
+        .pill-sub {
+            background: rgba(255,255,255,0.06);
+            color: #38bdf8;
+            font-weight: 800;
+            font-size: 15px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        /* KHU VỰC 2: BẢNG QUAY THỬ XSMN */
+        .spin-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+            margin-bottom: 30px;
+        }
+        .spin-toolbar {
+            background: linear-gradient(90deg, #1e293b, #0f172a);
+            padding: 16px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .btn-action {
+            background: linear-gradient(135deg, var(--gold), #f59e0b);
+            color: #000;
+            border: none;
+            padding: 12px 26px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.45);
+            transition: 0.2s;
+        }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 0 28px rgba(251, 191, 36, 0.75); }
+        .btn-action:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.07);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .btn-secondary:hover { background: var(--gold); color: #000; }
+
+        .table-scroll { overflow-x: auto; }
+        table.xsmn-board { width: 100%; border-collapse: collapse; text-align: center; }
+        table.xsmn-board th {
+            background: #0f172a;
+            color: var(--gold);
+            padding: 14px 10px;
+            font-size: 16px;
+            font-weight: 900;
+            border: 1px solid var(--card-border);
+            text-transform: uppercase;
+        }
+        table.xsmn-board td {
+            border: 1px solid var(--card-border);
+            padding: 10px 8px;
+        }
+        .col-prize {
+            width: 75px;
+            background: #0b0f19;
+            color: var(--text-sub);
+            font-weight: 800;
+            font-size: 13px;
+        }
+        .num-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 16px;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .num-g8, .num-db {
+            color: #fb7185;
+            font-size: 24px;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(251, 113, 133, 0.35);
+        }
+        .rolling { color: var(--gold) !important; opacity: 0.85; }
+
+        /* KHU VỰC 3: BẢNG ĐẦU ĐUÔI LOTO */
+        .loto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .loto-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .loto-box-head {
+            background: #1e293b;
+            color: var(--gold);
+            padding: 10px;
+            font-weight: 800;
+            text-align: center;
+            font-size: 15px;
+        }
+        table.loto-tb { width: 100%; border-collapse: collapse; font-size: 14px; }
+        table.loto-tb td { border-top: 1px solid var(--card-border); padding: 6px 12px; }
+        .td-dau { width: 65px; font-weight: 800; color: var(--gold); background: rgba(0,0,0,0.25); text-align: center; }
+        .td-duoi { font-weight: 700; color: #e2e8f0; letter-spacing: 0.5px; }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <header>
-            <h2 class="brand-name">CẬU TƯ RONG</h2>
-            <h1 class="app-title">VÉ SỐ PHÁT ĐẠT</h1>
-            <p class="subtitle">Hệ Thống Phân Tích & Soi Cầu XSMN</p>
-        </header>
 
-        <div class="control-panel">
-            <div class="input-group">
-                <label>Giải Đặc Biệt (GĐB):</label>
-                <input type="text" id="gdb" placeholder="VD: 248195" maxlength="6">
+<header class="hero-header">
+    <div class="badge-top">★ CHUYÊN TRANG XỔ SỐ MIỀN NAM VIP ★</div>
+    <h1>THAM KHẢO SỐ ĐẸP & QUAY THỬ XSMN</h1>
+    <p id="todayText">Lịch mở thưởng và phân tích nhịp cầu đẹp các đài Miền Nam</p>
+</header>
+
+<div class="main-wrap">
+    <!-- THANH CHỌN THỨ TRONG TUẦN -->
+    <div class="day-nav" id="dayNav"></div>
+
+    <!-- PHẦN 1: THAM KHẢO SỐ ĐẸP XSMN -->
+    <div class="sec-head">
+        <div class="sec-title">🔥 BẢNG VÀNG THAM KHẢO XSMN HÔM NAY</div>
+        <button class="btn-secondary" onclick="refreshReference()">🔄 Đổi Bộ Số Tham Khảo Mới</button>
+    </div>
+    <div class="ref-grid" id="refGrid"></div>
+
+    <!-- PHẦN 2: QUAY THỬ KẾT QUẢ XSMN -->
+    <div class="spin-panel">
+        <div class="spin-toolbar">
+            <div>
+                <div class="sec-title" style="margin:0;">🎰 LỒNG CẦU QUAY THỬ XỔ SỐ MIỀN NAM</div>
+                <small style="color:var(--text-sub);">Mô phỏng quay thử 18 giải từ Giải 8 đến Giải Đặc Biệt cho tất cả đài trong ngày</small>
             </div>
-            <div class="input-group">
-                <label>Giải Nhất (G1):</label>
-                <input type="text" id="g1" placeholder="VD: 71345" maxlength="5">
-            </div>
-            <div class="input-group">
-                <label>Dãy số bất kỳ (Tìm Cầu Kẹp):</label>
-                <input type="text" id="giaiKhac" placeholder="VD: 83482" maxlength="5">
-            </div>
-            
-            <button class="btn-calc" onclick="xuLySoiCau()">PHÂN TÍCH NHỊP LÔ</button>
+            <button id="btnSpin" class="btn-action" onclick="startSpinXSMN()">⚡ BẮT ĐẦU QUAY THỬ</button>
         </div>
 
-        <div class="result-board">
-            <h3>KẾT QUẢ DỰ ĐOÁN</h3>
-            <div class="result-item">
-                <span>Cầu Pascal:</span>
-                <span class="highlight neon-text" id="kqPascal">00</span>
-            </div>
-            <div class="result-item">
-                <span>Bóng Dương (2 số cuối GĐB):</span>
-                <span class="highlight neon-text" id="kqBongDuong">00</span>
-            </div>
-            <div class="result-item">
-                <span>Bóng Âm (2 số cuối GĐB):</span>
-                <span class="highlight neon-text" id="kqBongAm">00</span>
-            </div>
-            <div class="result-item">
-                <span>Cầu Kẹp:</span>
-                <span class="highlight neon-text" id="kqKep">Không có</span>
-            </div>
+        <div class="table-scroll">
+            <table class="xsmn-board" id="boardXSMN"></table>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- PHẦN 3: THỐNG KÊ ĐẦU ĐUÔI -->
+    <div class="sec-head">
+        <div class="sec-title">📊 BẢNG THỐNG KÊ ĐẦU - ĐUÔI LOTO (2 SỐ CUỐI)</div>
+    </div>
+    <div class="loto-grid" id="lotoGrid"></div>
+</div>
+
+<script>
+    // Lịch mở thưởng chuẩn Xổ Số Miền Nam
+    const LICH_XSMN = [
+        { day: "Chủ Nhật", stations: ["Tiền Giang", "Kiên Giang", "Đà Lạt"] },
+        { day: "Thứ Hai", stations: ["TP.HCM", "Đồng Tháp", "Cà Mau"] },
+        { day: "Thứ Ba", stations: ["Bến Tre", "Vũng Tàu", "Bạc Liêu"] },
+        { day: "Thứ Tư", stations: ["Đồng Nai", "Cần Thơ", "Sóc Trăng"] },
+        { day: "Thứ Năm", stations: ["Tây Ninh", "An Giang", "Bình Thuận"] },
+        { day: "Thứ Sáu", stations: ["Vĩnh Long", "Bình Dương", "Trà Vinh"] },
+        { day: "Thứ Bảy", stations: ["TP.HCM", "Long An", "Bình Phước", "Hậu Giang"] }
+    ];
+
+    // Cấu trúc 18 lô chuẩn XSMN
+    const CAU_TRUC_XSMN = [
+        ["Giải 8", 1, 2, "num-g8"],
+        ["Giải 7", 1, 3, ""],
+        ["Giải 6", 3, 4, ""],
+        ["Giải 5", 1, 4, ""],
+        ["Giải 4", 7, 5, ""],
+        ["Giải 3", 2, 5, ""],
+        ["Giải 2", 1, 5, ""],
+        ["Giải 1", 1, 5, ""],
+        ["Đặc Biệt", 1, 6, "num-db"]
+    ];
+
+    let selectedDay = new Date().getDay();
+    let isSpinning = false;
+
+    function randomDigits(len) {
+        let s = '';
+        for (let i = 0; i < len; i++) s += Math.floor(Math.random() * 10);
+        return s;
+    }
+
+    // Khởi tạo trang
+    window.onload = () => {
+        const now = new Date();
+        document.getElementById('todayText').innerText = 
+            `Hôm nay: ${LICH_XSMN[selectedDay].day}, ngày ${now.toLocaleDateString('vi-VN')} — Mở thưởng: ${LICH_XSMN[selectedDay].stations.join(' - ')}`;
+        renderDayButtons();
+        refreshReference();
+        renderSpinBoard();
+    };
+
+    // Vẽ thanh chọn Thứ
+    function renderDayButtons() {
+        const nav = document.getElementById('dayNav');
+        nav.innerHTML = '';
+        LICH_XSMN.forEach((item, idx) => {
+            const btn = document.createElement('button');
+            btn.className = `day-btn ${idx === selectedDay ? 'active' : ''}`;
+            btn.innerHTML = `${item.day}<span>${item.stations.length} đài</span>`;
+            btn.onclick = () => {
+                if (isSpinning) return;
+                selectedDay = idx;
+                renderDayButtons();
+                refreshReference();
+                renderSpinBoard();
+            };
+            nav.appendChild(btn);
+        });
+    }
+
+    // Vẽ khu vực Tham khảo số đẹp XSMN
+    function refreshReference() {
+        const stations = LICH_XSMN[selectedDay].stations;
+        const grid = document.getElementById('refGrid');
+        grid.innerHTML = '';
+
+        stations.forEach(st => {
+            const btl = randomDigits(2);
+            const stl1 = randomDigits(2);
+            const stl2 = stl1.split('').reverse().join('') === stl1 
+                ? randomDigits(2) 
+                : stl1.split('').reverse().join('');
+            const xiuChu = `${Math.floor(Math.random() * 9) + 1}${btl} - ${Math.floor(Math.random() * 9) + 1}${stl1}`;
+            const dauDuoi = `Đầu ${btl[0]} - Đuôi ${stl1[1]}`;
+
+            grid.innerHTML += `
+                <div class="vip-card">
+                    <div class="vip-card-head">
+                        <span class="station-name">🎯 Đài ${st}</span>
+                        <span class="tag-vip">CHỐT SỐ VIP</span>
+                    </div>
+                    <div class="balls-row">
+                        <span>Bạch Thủ Lô (Độc thủ):</span>
+                        <span class="ball-vip">${btl}</span>
+                    </div>
+                    <div class="balls-row">
+                        <span>Song Thủ Lô Cặp:</span>
+                        <span class="pill-gold">${stl1} - ${stl2}</span>
+                    </div>
+                    <div class="balls-row">
+                        <span>Xỉu Chủ / 3 Càng:</span>
+                        <span class="pill-sub">${xiuChu}</span>
+                    </div>
+                    <div class="balls-row" style="margin-bottom:0;">
+                        <span>Chạm Đầu - Đuôi:</span>
+                        <strong style="color:#4ade80;">${dauDuoi}</strong>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // Vẽ bảng Quay thử XSMN
+    function renderSpinBoard() {
+        const stations = LICH_XSMN[selectedDay].stations;
+        const board = document.getElementById('boardXSMN');
+
+        let html = `<thead><tr><th class="col-prize">Giải</th>`;
+        stations.forEach(st => { html += `<th>Đài ${st}</th>`; });
+        html += `</tr></thead><tbody>`;
+
+        CAU_TRUC_XSMN.forEach((row, rIdx) => {
+            const [pName, count, digits, cls] = row;
+            html += `<tr><td class="col-prize">${pName}</td>`;
+            stations.forEach((_, sIdx) => {
+                let spans = '';
+                for (let c = 0; c < count; c++) {
+                    spans += `<span id="cell-${sIdx}-${rIdx}-${c}" class="${cls}">${'-'.repeat(digits)}</span>`;
+                }
+                html += `<td><div class="num-group">${spans}</div></td>`;
+            });
+            html += `</tr>`;
+        });
+        html += `</tbody>`;
+        board.innerHTML = html;
+
+        renderEmptyLoto(stations);
+    }
+
+    function renderEmptyLoto(stations) {
+        const lotoGrid = document.getElementById('lotoGrid');
+        lotoGrid.innerHTML = '';
+        stations.forEach((st, sIdx) => {
+            let rows = '';
+            for (let d = 0; d <= 9; d++) {
+                rows += `<tr><td class="td-dau">Đầu ${d}</td><td class="td-duoi" id="loto-${sIdx}-${d}">-</td></tr>`;
+            }
+            lotoGrid.innerHTML += `
+                <div class="loto-box">
+                    <div class="loto-box-head">Thống Kê Loto — Đài ${st}</div>
+                    <table class="loto-tb">${rows}</table>
+                </div>
+            `;
+        });
+    }
+
+    // Hiệu ứng Quay thử lần lượt từ Giải 8 đến Đặc Biệt
+    function startSpinXSMN() {
+        if (isSpinning) return;
+        isSpinning = true;
+        const btn = document.getElementById('btnSpin');
+        btn.disabled = true;
+        btn.innerText = "⏳ ĐANG QUAY LỒNG CẦU...";
+
+        const stations = LICH_XSMN[selectedDay].stations;
+        renderEmptyLoto(stations);
+
+        const lotoMemory = stations.map(() => []);
+        const sequence = [];
+
+        CAU_TRUC_XSMN.forEach((row, rIdx) => {
+            const count = row[1];
+            const digits = row[2];
+            for (let c = 0; c < count; c++) {
+                stations.forEach((_, sIdx) => {
+                    sequence.push({
+                        el: document.getElementById(`cell-${sIdx}-${rIdx}-${c}`),
+                        digits,
+                        sIdx
+                    });
+                });
+            }
+        });
+
+        sequence.forEach((item, index) => {
+            item.el.classList.add('rolling');
+            const timer = setInterval(() => {
+                item.el.innerText = randomDigits(item.digits);
+            }, 50);
+
+            setTimeout(() => {
+                clearInterval(timer);
+                const finalNum = randomDigits(item.digits);
+                item.el.innerText = finalNum;
+                item.el.classList.remove('rolling');
+
+                lotoMemory[item.sIdx].push(finalNum.slice(-2));
+                updateLotoStation(item.sIdx, lotoMemory[item.sIdx]);
+
+                if (index === sequence.length - 1) {
+                    isSpinning = false;
+                    btn.disabled = false;
+                    btn.innerText = "⚡ QUAY THỬ LẠI LẦN NỮA";
+                }
+            }, 300 + index * 90);
+        });
+    }
+
+    function updateLotoStation(sIdx, list) {
+        const buckets = Array.from({ length: 10 }, () => []);
+        list.forEach(num => {
+            const dau = parseInt(num[0], 10);
+            buckets[dau].push(num[1]);
+        });
+        for (let d = 0; d <= 9; d++) {
+            const cell = document.getElementById(`loto-${sIdx}-${d}`);
+            if (cell) cell.innerText = buckets[d].length ? buckets[d].sort().join(', ') : '-';
+        }
+    }
+</script>
+
 </body>
 </html>
